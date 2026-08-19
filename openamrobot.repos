@@ -1,0 +1,16 @@
+# OpenAMRobot workspace manifest (vcstool format).
+#   mkdir -p ~/oamr_ws && cd ~/oamr_ws
+#   vcs import . < /path/to/openamrobot.repos
+#   colcon build
+repositories:
+  src/openamrobot-interfaces:   { type: git, url: https://github.com/openAMRobot/openamrobot-interfaces.git, version: main }
+  src/openamrobot-comm:         { type: git, url: https://github.com/openAMRobot/openamrobot-comm.git, version: main }
+  src/openamrobot-manipulation: { type: git, url: https://github.com/openAMRobot/openamrobot-manipulation.git, version: main }
+  src/openamr-platform-sw:      { type: git, url: https://github.com/openAMRobot/openamr-platform-sw.git, version: main }
+  src/openamr-upperbody-sw:     { type: git, url: https://github.com/openAMRobot/openamr-upperbody-sw.git, version: main }
+  firmware/openamr-platform-fw: { type: git, url: https://github.com/openAMRobot/openamr-platform-fw.git, version: main }
+  firmware/openamr-upperbody-fw:{ type: git, url: https://github.com/openAMRobot/openamr-upperbody-fw.git, version: main }
+  hardware/openamr-platform-hw: { type: git, url: https://github.com/openAMRobot/openamr-platform-hw.git, version: main }
+  hardware/openamr-upperbody-hw:{ type: git, url: https://github.com/openAMRobot/openamr-upperbody-hw.git, version: main }
+  ui/openamrobot-ui:            { type: git, url: https://github.com/openAMRobot/openamrobot-ui.git, version: main }
+  docs/openamrobot-docs:        { type: git, url: https://github.com/openAMRobot/openamrobot-docs.git, version: main }
