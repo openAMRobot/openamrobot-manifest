@@ -2,6 +2,8 @@
 
 Workspace manifest for the OpenAMRobot ecosystem: the repositories and versions that make up a full source checkout.
 
+> **Status:** Active
+
 ## Assemble the workspace
 
     mkdir -p ~/oamr_ws && cd ~/oamr_ws
