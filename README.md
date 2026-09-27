@@ -12,6 +12,15 @@ Workspace manifest for the OpenAMRobot ecosystem: the repositories and versions 
 
 ROS 2 packages land in `src/` and build with colcon. Firmware, hardware, UI, and docs land in their own folders and are not part of the colcon build.
 
+## Validate the manifest
+
+Requires Python 3 with PyYAML, `yamllint` and `vcstool`:
+
+    python3 -m unittest discover -s tests -v
+    python3 tools/check_manifest.py openamrobot.repos
+
+`check_manifest.py` reports three stages separately: `yamllint` (syntax, duplicate keys), `strict` (duplicate-key-rejecting loader and manifest structure) and `remote` (`vcs validate`: URLs reachable, versions exist; needs network, `--offline` skips it and reports it as SKIPPED). These do not import, discover packages or build; run `vcs import`, `colcon list` and `colcon build` for those.
+
 Part of the OpenAMRobot ecosystem: https://github.com/openAMRobot
 
 ## Ownership, licensing, and contributions

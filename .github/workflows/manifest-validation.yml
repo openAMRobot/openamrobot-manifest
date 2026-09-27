@@ -1,0 +1,34 @@
+# Repo-local manifest gate. Temporary until the shared OpenAMRobot
+# verification harness provides manifest validation; migrate then.
+name: Manifest validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  manifest-validation:
+    name: manifest-validation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install validation tools
+        run: python -m pip install yamllint==1.38.0 vcstool==0.3.0 PyYAML==6.0.2
+
+      - name: Validator regression tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Validate openamrobot.repos
+        run: python tools/check_manifest.py openamrobot.repos
