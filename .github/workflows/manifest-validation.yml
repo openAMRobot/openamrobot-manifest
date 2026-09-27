@@ -25,7 +25,10 @@ jobs:
           python-version: '3.12'
 
       - name: Install validation tools
-        run: python -m pip install yamllint==1.38.0 vcstool==0.3.0 PyYAML==6.0.2
+        # vcstool 0.3.0 imports pkg_resources, which setuptools>=81 removed.
+        run: >-
+          python -m pip install yamllint==1.38.0 vcstool==0.3.0 PyYAML==6.0.2
+          setuptools==79.0.1
 
       - name: Validator regression tests
         run: python -m unittest discover -s tests -v

@@ -145,9 +145,12 @@ def run_vcs_validate(manifest):
         proc = subprocess.run(
             ['vcs', 'validate', '--retry', '2'], stdin=stream,
             capture_output=True, text=True, timeout=600)
-    output = '\n'.join(
-        line for line in (proc.stdout + proc.stderr).splitlines()
-        if 'pkg_resources' not in line)
+    output = proc.stdout + proc.stderr
+    if proc.returncode == 0:
+        # Drop vcstool's pkg_resources deprecation noise; keep it on failure.
+        output = '\n'.join(
+            line for line in output.splitlines()
+            if 'pkg_resources' not in line)
     missing = missing_refs(output)
     if missing:
         output += '\nversion is not a branch, tag or commit hash: ' + \
