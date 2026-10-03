@@ -8,6 +8,10 @@ repositories:
   src/openamrobot-manipulation: { type: git, url: https://github.com/openAMRobot/openamrobot-manipulation.git, version: main }
   src/openamr-platform-sw:      { type: git, url: https://github.com/openAMRobot/openamr-platform-sw.git, version: main }
   src/openamr-upperbody-sw:     { type: git, url: https://github.com/openAMRobot/openamr-upperbody-sw.git, version: main }
+  # Third-party: Slamtec sllidar_ros2 (BSD), driver for the RPLIDAR S3 navigation LiDAR
+  # (P-03 rev18.4 item 13). No ROS 2 Jazzy binary package exists, so it is built from
+  # source, pinned to an exact upstream commit.
+  src/sllidar_ros2:             { type: git, url: https://github.com/Slamtec/sllidar_ros2.git, version: 34300099fadfc772965962dec837bf436706188f }
   firmware/openamr-platform-fw: { type: git, url: https://github.com/openAMRobot/openamr-platform-fw.git, version: main }
   firmware/openamr-upperbody-fw: { type: git, url: https://github.com/openAMRobot/openamr-upperbody-fw.git, version: main }
   hardware/openamr-platform-hw: { type: git, url: https://github.com/openAMRobot/openamr-platform-hw.git, version: main }
