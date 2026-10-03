@@ -64,7 +64,7 @@ class ManifestCheckTest(unittest.TestCase):
         self.assertEqual(code, 0, out)
         self.assertIn('[PASS] yamllint', out)
         self.assertIn('[PASS] strict', out)
-        self.assertIn('11 repositories', out)
+        self.assertIn('12 repositories', out)
         self.assertIn('[SKIPPED] remote', out)
 
     # Original defects (D-03 H1)
@@ -88,7 +88,7 @@ class ManifestCheckTest(unittest.TestCase):
         # silently replaces the first entry.
         text = manifest_text() + DUPLICATE_LINE
         data = yaml.safe_load(text)
-        self.assertEqual(len(data['repositories']), 11)
+        self.assertEqual(len(data['repositories']), 12)
         self.assertIn('comm-fork', data['repositories']['src/openamrobot-comm']['url'])
 
     def test_rejects_duplicate_repository_key(self):
