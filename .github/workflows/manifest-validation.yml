@@ -35,3 +35,20 @@ jobs:
 
       - name: Validate openamrobot.repos
         run: python tools/check_manifest.py openamrobot.repos
+
+      - name: Validate release YAML and immutable refs
+        run: |
+          python tools/check_manifest.py --offline releases/v2.0.0-rc.1.repos
+          python tools/check_release_manifest.py releases/v2.0.0-rc.1.repos --development openamrobot.repos
+
+      - name: Import release into a fresh workspace and verify every SHA
+        run: |
+          mkdir -p "$RUNNER_TEMP/rc1-workspace"
+          vcs import "$RUNNER_TEMP/rc1-workspace" < releases/v2.0.0-rc.1.repos
+          vcs export --exact "$RUNNER_TEMP/rc1-workspace" > "$RUNNER_TEMP/rc1-exact.repos"
+          python tools/check_release_manifest.py releases/v2.0.0-rc.1.repos --exact-export "$RUNNER_TEMP/rc1-exact.repos"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rc1-exact-manifest
+          path: ${{ runner.temp }}/rc1-exact.repos

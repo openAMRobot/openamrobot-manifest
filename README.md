@@ -10,7 +10,51 @@ Workspace manifest for the OpenAMRobot ecosystem: the repositories and versions 
     vcs import . < /path/to/openamrobot.repos
     colcon build
 
-ROS 2 packages land in `src/` and build with colcon. Firmware, hardware, UI, and docs land in their own folders and are not part of the colcon build.
+ROS 2 packages land in `src/`; additional UI ROS packages are discovered under `ui/` when colcon runs at the workspace root. Firmware, hardware and docs use their own build procedures. Import and discovery do not establish that a full workspace build passes.
+
+## Pinned release checkout (OA-39)
+
+`openamrobot.repos` remains the development manifest and may track branches.
+[`releases/v2.0.0-rc.1.repos`](releases/v2.0.0-rc.1.repos) is a separate candidate
+snapshot dated 2026-10-19. All 11 entries use full 40-character commit SHAs and
+retain the development manifest's repository URLs and checkout paths.
+
+From this repository, validate the snapshot:
+
+```sh
+python3 -m unittest discover -s tests -v
+python3 tools/check_manifest.py --offline releases/v2.0.0-rc.1.repos
+python3 tools/check_release_manifest.py releases/v2.0.0-rc.1.repos --development openamrobot.repos
+```
+
+Import into a **new, empty** workspace, then compare the exact checkout:
+
+```sh
+mkdir -p ~/oamr_rc1_ws
+vcs import ~/oamr_rc1_ws < releases/v2.0.0-rc.1.repos
+vcs export --exact ~/oamr_rc1_ws > /tmp/rc1-exact.repos
+python3 tools/check_release_manifest.py releases/v2.0.0-rc.1.repos --exact-export /tmp/rc1-exact.repos
+cd ~/oamr_rc1_ws
+colcon list
+```
+
+The strict release checker rejects branches, tags and abbreviated hashes;
+comparison with an exact export rejects changed, missing or extra repositories.
+The network import/export stage is separate from offline YAML validation.
+It also avoids the vcstool 0.3.0 `vcs validate` bug for advertised commit hashes
+tracked in [issue #12](https://github.com/openAMRobot/openamrobot-manifest/issues/12).
+Development validation retains its existing remote check.
+
+The shared component pins agree with the OA-05 candidate in
+[release PR #12](https://github.com/openAMRobot/openamrobot-release/pull/12).
+That bundle also includes separately pinned drivers and governance. Adding
+driver sources to this workspace is OA-06 and is handled separately.
+
+This snapshot is not final rc.1 acceptance. Package discovery exposes the known
+duplicate `openamr_ui_msgs` under `src/` and `ui/` (OA-08); the manifest does not
+hide UI packages or resolve that build issue. Updating a release snapshot
+requires a reviewed PR with explicit replacement SHAs and fresh exact-export
+evidence. Future release versions should get their own `.repos` file.
 
 ## Validate the manifest
 
