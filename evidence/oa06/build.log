@@ -1,0 +1,461 @@
+Starting >>> micro_ros_agent
+--- stderr: micro_ros_agent
+Cloning into 'xrceagent'...
+HEAD is now at 7362281 Release v2.4.3
+Cloning into 'spdlog'...
+HEAD is now at eb322062 Bump version to 1.9.2
+---
+Finished <<< micro_ros_agent [6min 33s]
+Starting >>> sllidar_ros2
+--- stderr: sllidar_ros2
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp: In member function ‘bool rp::arch::net::raw_serial::open(const char*, uint32_t, uint32_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp:97:74: warning: unused parameter ‘flags’ [-Wunused-parameter]
+   97 | bool raw_serial::open(const char * portname, uint32_t baudrate, uint32_t flags)
+      |                                                                 ~~~~~~~~~^~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp: In member function ‘virtual void rp::arch::net::raw_serial::flush(_u32)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp:281:30: warning: unused parameter ‘flags’ [-Wunused-parameter]
+  281 | void raw_serial::flush( _u32 flags)
+      |                         ~~~~~^~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp: In member function ‘virtual int rp::arch::net::raw_serial::waitforsent(_u32, size_t*)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp:286:34: warning: unused parameter ‘timeout’ [-Wunused-parameter]
+  286 | int raw_serial::waitforsent(_u32 timeout, size_t * returned_size)
+      |                             ~~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp: In member function ‘virtual int rp::arch::net::raw_serial::waitforrecv(_u32, size_t*)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp:292:34: warning: unused parameter ‘timeout’ [-Wunused-parameter]
+  292 | int raw_serial::waitforrecv(_u32 timeout, size_t * returned_size)
+      |                             ~~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp: In member function ‘virtual void rp::arch::net::raw_serial::cancelOperation()’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp:427:5: warning: value computed is not used [-Wunused-value]
+  427 |     (int)::write(_selfpipe[1], "x", 1);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp:427:17: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  427 |     (int)::write(_selfpipe[1], "x", 1);
+      |          ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp: In member function ‘virtual bool rp::arch::net::raw_serial::bind(const char*, uint32_t, uint32_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_serial.cpp:91:12: warning: ‘char* __builtin_strncpy(char*, const char*, long unsigned int)’ specified bound 200 equals destination size [-Wstringop-truncation]
+   91 |     strncpy(_portName, portname, sizeof(_portName));
+      |            ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/arch/linux/net_socket.cpp:10:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunnpacker_commondef.h:41,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp:39:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunnpacker_commondef.h:41,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.cpp:39:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp:40:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onCustomSampleDataDecoded(_u8, _u32, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:52: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:66: warning: unused parameter ‘customCode’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                             ~~~~~^~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:90: warning: unused parameter ‘data’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                              ~~~~~~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:103: warning: unused parameter ‘size’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                                                ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onDecodingError(int, _u8, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:42: warning: unused parameter ‘errMsg’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                      ~~~~^~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:54: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                  ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:75: warning: unused parameter ‘payload’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                               ~~~~~~~~~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:91: warning: unused parameter ‘size’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                                                    ~~~~~~~^~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.cpp:40:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onCustomSampleDataDecoded(_u8, _u32, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:54:52: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:54:66: warning: unused parameter ‘customCode’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                             ~~~~~^~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:54:90: warning: unused parameter ‘data’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                              ~~~~~~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:54:103: warning: unused parameter ‘size’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                                                ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onDecodingError(int, _u8, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:56:42: warning: unused parameter ‘errMsg’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                      ~~~~^~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:56:54: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                  ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:56:75: warning: unused parameter ‘payload’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                               ~~~~~~~~~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:56:91: warning: unused parameter ‘size’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                                                    ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp: In member function ‘virtual void sl::internal::unpacker::UnpackerHandler_CapsuleNode::onUnpackerContextSet(sl::internal::LIDARSampleDataUnpacker::UnpackerContextType, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp:93:132: warning: unused parameter ‘size’ [-Wunused-parameter]
+   93 | void UnpackerHandler_CapsuleNode::onUnpackerContextSet(LIDARSampleDataUnpacker::UnpackerContextType type, const void* data, size_t size)
+      |                                                                                                                             ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp: In member function ‘virtual void sl::internal::unpacker::UnpackerHandler_UltraCapsuleNode::onUnpackerContextSet(sl::internal::LIDARSampleDataUnpacker::UnpackerContextType, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp:310:137: warning: unused parameter ‘size’ [-Wunused-parameter]
+  310 | void UnpackerHandler_UltraCapsuleNode::onUnpackerContextSet(LIDARSampleDataUnpacker::UnpackerContextType type, const void* data, size_t size)
+      |                                                                                                                                  ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp: In member function ‘virtual void sl::internal::unpacker::UnpackerHandler_DenseCapsuleNode::onUnpackerContextSet(sl::internal::LIDARSampleDataUnpacker::UnpackerContextType, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp:624:137: warning: unused parameter ‘size’ [-Wunused-parameter]
+  624 | void UnpackerHandler_DenseCapsuleNode::onUnpackerContextSet(LIDARSampleDataUnpacker::UnpackerContextType type, const void* data, size_t size)
+      |                                                                                                                                  ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp: In member function ‘void sl::internal::unpacker::UnpackerHandler_DenseCapsuleNode::_onScanNodeDenseCapsuleData(rplidar_response_dense_capsule_measurement_nodes_t&, sl::internal::LIDARSampleDataUnpackerInner*)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp:763:30: warning: type qualifiers ignored on cast result type [-Wignored-qualifiers]
+  763 |             const int dist = static_cast<const int>(_cached_previous_dense_capsuledata.cabins[pos].distance);
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp: In member function ‘virtual void sl::internal::unpacker::UnpackerHandler_UltraDenseCapsuleNode::onUnpackerContextSet(sl::internal::LIDARSampleDataUnpacker::UnpackerContextType, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_capsules.cpp:838:142: warning: unused parameter ‘size’ [-Wunused-parameter]
+  838 | void UnpackerHandler_UltraDenseCapsuleNode::onUnpackerContextSet(LIDARSampleDataUnpacker::UnpackerContextType type, const void* data, size_t size)
+      |                                                                                                                                       ~~~~~~~^~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunnpacker_commondef.h:41,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_hqnode.cpp:39:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_hqnode.cpp:40:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onCustomSampleDataDecoded(_u8, _u32, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:52: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:66: warning: unused parameter ‘customCode’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                             ~~~~~^~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:90: warning: unused parameter ‘data’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                              ~~~~~~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:103: warning: unused parameter ‘size’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                                                ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onDecodingError(int, _u8, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:42: warning: unused parameter ‘errMsg’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                      ~~~~^~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:54: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                  ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:75: warning: unused parameter ‘payload’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                               ~~~~~~~~~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:91: warning: unused parameter ‘size’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                                                    ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_hqnode.cpp: In member function ‘virtual void sl::internal::unpacker::UnpackerHandler_HQNode::onUnpackerContextSet(sl::internal::LIDARSampleDataUnpacker::UnpackerContextType, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_hqnode.cpp:177:127: warning: unused parameter ‘size’ [-Wunused-parameter]
+  177 | void UnpackerHandler_HQNode::onUnpackerContextSet(LIDARSampleDataUnpacker::UnpackerContextType type, const void* data, size_t size)
+      |                                                                                                                        ~~~~~~~^~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunnpacker_commondef.h:41,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_normalnode.cpp:39:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_normalnode.cpp:40:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onCustomSampleDataDecoded(_u8, _u32, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:52: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:66: warning: unused parameter ‘customCode’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                             ~~~~~^~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:90: warning: unused parameter ‘data’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                              ~~~~~~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:54:103: warning: unused parameter ‘size’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                                                ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onDecodingError(int, _u8, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:42: warning: unused parameter ‘errMsg’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                      ~~~~^~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:54: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                  ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:75: warning: unused parameter ‘payload’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                               ~~~~~~~~~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/../dataunpacker.h:56:91: warning: unused parameter ‘size’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                                                    ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_normalnode.cpp: In member function ‘virtual void sl::internal::unpacker::UnpackerHandler_NormalNode::onUnpackerContextSet(sl::internal::LIDARSampleDataUnpacker::UnpackerContextType, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/unpacker/handler_normalnode.cpp:144:131: warning: unused parameter ‘size’ [-Wunused-parameter]
+  144 | void UnpackerHandler_NormalNode::onUnpackerContextSet(LIDARSampleDataUnpacker::UnpackerContextType type, const void* data, size_t size)
+      |                                                                                                                            ~~~~~~~^~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/rplidar_driver.cpp:33:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/rplidar_driver.cpp: In member function ‘u_result rp::standalone::rplidar::RPlidarDriver::connect(const char*, _u32, _u32)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/rplidar_driver.cpp:67:77: warning: unused parameter ‘flag’ [-Wunused-parameter]
+   67 |     u_result RPlidarDriver::connect(const char *path, _u32 portOrBaud, _u32 flag)
+      |                                                                        ~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/rplidar_driver.cpp: In member function ‘u_result rp::standalone::rplidar::RPlidarDriver::reset(_u32)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/rplidar_driver.cpp:101:40: warning: unused parameter ‘timeout’ [-Wunused-parameter]
+  101 |     u_result RPlidarDriver::reset(_u32 timeout)
+      |                                   ~~~~~^~~~~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/hal/thread.cpp:35:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/rplidar_driver.cpp: In member function ‘u_result rp::standalone::rplidar::RPlidarDriver::getScanDataWithInterval(rplidar_response_measurement_node_t*, size_t&)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/rplidar_driver.cpp:180:91: warning: unused parameter ‘nodebuffer’ [-Wunused-parameter]
+  180 |     u_result RPlidarDriver::getScanDataWithInterval(rplidar_response_measurement_node_t * nodebuffer, size_t & count)
+      |                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/rplidar_driver.cpp:180:112: warning: unused parameter ‘count’ [-Wunused-parameter]
+  180 |     u_result RPlidarDriver::getScanDataWithInterval(rplidar_response_measurement_node_t * nodebuffer, size_t & count)
+      |                                                                                                       ~~~~~~~~~^~~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/hal/thread.cpp:43:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/arch/linux/thread.hpp: In static member function ‘static rp::hal::Thread rp::hal::Thread::create(thread_proc_t, void*)’:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/arch/linux/thread.hpp:52:57: warning: cast between incompatible function types from ‘thread_proc_t’ {aka ‘long unsigned int (*)(void*)’} to ‘void* (*)(void*)’ [-Wcast-function-type]
+   52 |     pthread_create((pthread_t *)&newborn._handle, NULL, (void * (*)(void *))proc, data);
+      |                                                         ^~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/arch/linux/thread.hpp: In member function ‘u_result rp::hal::Thread::join(long unsigned int)’:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/src/arch/linux/thread.hpp:176:37: warning: unused parameter ‘timeout’ [-Wunused-parameter]
+  176 | u_result Thread::join(unsigned long timeout)
+      |                       ~~~~~~~~~~~~~~^~~~~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:41,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_crc.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_crc.cpp:33:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_async_transceiver.cpp:35:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_async_transceiver.cpp:44:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_async_transceiver.h: In member function ‘virtual void sl::internal::IAsyncProtocolCodec::onChannelError(u_result)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_async_transceiver.h:90:48: warning: unused parameter ‘errCode’ [-Wunused-parameter]
+   90 |         virtual void   onChannelError(u_result errCode) {}
+      |                                       ~~~~~~~~~^~~~~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:33:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:50:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onCustomSampleDataDecoded(_u8, _u32, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:54:52: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:54:66: warning: unused parameter ‘customCode’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                             ~~~~~^~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:54:90: warning: unused parameter ‘data’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                              ~~~~~~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:54:103: warning: unused parameter ‘size’ [-Wunused-parameter]
+   54 |         virtual void onCustomSampleDataDecoded(_u8 ansType, _u32 customCode, const void* data, size_t size) {}
+      |                                                                                                ~~~~~~~^~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h: In member function ‘virtual void sl::internal::LIDARSampleDataListener::onDecodingError(int, _u8, const void*, size_t)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:56:42: warning: unused parameter ‘errMsg’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                      ~~~~^~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:56:54: warning: unused parameter ‘ansType’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                  ~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:56:75: warning: unused parameter ‘payload’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                               ~~~~~~~~~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/dataunpacker/dataunpacker.h:56:91: warning: unused parameter ‘size’ [-Wunused-parameter]
+   56 |         virtual void onDecodingError(int errMsg, _u8 ansType, const void* payload, size_t size) {}
+      |                                                                                    ~~~~~~~^~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:51:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_async_transceiver.h: In member function ‘virtual void sl::internal::IAsyncProtocolCodec::onChannelError(u_result)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_async_transceiver.h:90:48: warning: unused parameter ‘errCode’ [-Wunused-parameter]
+   90 |         virtual void   onChannelError(u_result errCode) {}
+      |                                       ~~~~~~~~~^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp: In member function ‘virtual sl_result sl::SlamtecLidarDriver::reset(sl_u32)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:511:32: warning: unused parameter ‘timeoutInMs’ [-Wunused-parameter]
+  511 |         sl_result reset(sl_u32 timeoutInMs = DEFAULT_TIMEOUT)
+      |                         ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp: In member function ‘virtual sl_result sl::SlamtecLidarDriver::startScan(bool, bool, sl_u32, sl::LidarScanMode*)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:586:69: warning: unused parameter ‘options’ [-Wunused-parameter]
+  586 |         sl_result startScan(bool force, bool useTypicalScan, sl_u32 options = 0, LidarScanMode* outUsedScanMode = nullptr)
+      |                                                              ~~~~~~~^~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp: In member function ‘virtual sl_result sl::SlamtecLidarDriver::stop(sl_u32)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:763:31: warning: unused parameter ‘timeout’ [-Wunused-parameter]
+  763 |         sl_result stop(sl_u32 timeout = DEFAULT_TIMEOUT)
+      |                        ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp: In member function ‘virtual sl_result sl::SlamtecLidarDriver::getFrequency(const sl::LidarScanMode&, const sl_lidar_response_measurement_node_hq_t*, size_t, float&)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:880:110: warning: unused parameter ‘nodes’ [-Wunused-parameter]
+  880 |         sl_result getFrequency(const LidarScanMode& scanMode, const sl_lidar_response_measurement_node_hq_t* nodes, size_t count, float& frequency)
+      |                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp: In member function ‘virtual sl_result sl::SlamtecLidarDriver::getMotorInfo(sl::LidarMotorInfo&, sl_u32)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:1023:66: warning: unused parameter ‘timeoutInMs’ [-Wunused-parameter]
+ 1023 |         sl_result getMotorInfo(LidarMotorInfo &motorInfo, sl_u32 timeoutInMs)
+      |                                                           ~~~~~~~^~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp: In member function ‘u_result sl::SlamtecLidarDriver::getScanModeCount(sl_u16&, sl_u32)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:1199:61: warning: unused parameter ‘timeoutInMs’ [-Wunused-parameter]
+ 1199 |         u_result getScanModeCount(sl_u16& modeCount, sl_u32 timeoutInMs = DEFAULT_TIMEOUT)
+      |                                                      ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp: In instantiation of ‘void sl::RawSampleNodeHolder<T>::pushNode(_u64, const T*) [with T = sl_lidar_response_measurement_node_hq_t; _u64 = long unsigned int]’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:1648:42:   required from here
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:202:28: warning: unused parameter ‘timestamp_uS’ [-Wunused-parameter]
+  202 |         void pushNode(_u64 timestamp_uS, const T* node)
+      |                       ~~~~~^~~~~~~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp: At global scope:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:83:17: warning: ‘void sl::convert(const sl_lidar_response_measurement_node_hq_t&, sl_lidar_response_measurement_node_t&)’ defined but not used [-Wunused-function]
+   83 |     static void convert(const sl_lidar_response_measurement_node_hq_t& from, sl_lidar_response_measurement_node_t& to)
+      |                 ^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:75:17: warning: ‘void sl::convert(const sl_lidar_response_measurement_node_t&, sl_lidar_response_measurement_node_hq_t&)’ defined but not used [-Wunused-function]
+   75 |     static void convert(const sl_lidar_response_measurement_node_t& from, sl_lidar_response_measurement_node_hq_t& to)
+      |                 ^~~~~~~
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidar_driver.cpp:70:17: warning: ‘void sl::printDeprecationWarn(const char*, const char*)’ defined but not used [-Wunused-function]
+   70 |     static void printDeprecationWarn(const char* fn, const char* replacement)
+      |                 ^~~~~~~~~~~~~~~~~~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_protocol.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:39,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sdkcommon.h:49,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidarprotocol_codec.cpp:35:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar_cmd.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/rplidar.h:40:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_lidarprotocol_codec.cpp:49:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_async_transceiver.h: In member function ‘virtual void sl::internal::IAsyncProtocolCodec::onChannelError(u_result)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_async_transceiver.h:90:48: warning: unused parameter ‘errCode’ [-Wunused-parameter]
+   90 |         virtual void   onChannelError(u_result errCode) {}
+      |                                       ~~~~~~~~~^~~~~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:41,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_driver.h:54,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_serial_channel.cpp:33:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:41,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_driver.h:54,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_tcp_channel.cpp:33:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_tcp_channel.cpp: In member function ‘void sl::TcpChannel::setStatus(_u32)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_tcp_channel.cpp:109:29: warning: unused parameter ‘flag’ [-Wunused-parameter]
+  109 |         void setStatus(_u32 flag){}
+      |                        ~~~~~^~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:41,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_driver.h:54,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_udp_channel.cpp:33:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_udp_channel.cpp: In member function ‘void sl::UdpChannel::setStatus(_u32)’:
+/tmp/oa06-workspace/src/sllidar_ros2/sdk/src/sl_udp_channel.cpp:112:29: warning: unused parameter ‘flag’ [-Wunused-parameter]
+  112 |         void setStatus(_u32 flag){}
+      |                        ~~~~~^~~~
+In file included from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:41,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_driver.h:54,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar.h:36,
+                 from /tmp/oa06-workspace/src/sllidar_ros2/src/sllidar_node.cpp:38:
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_protocol.h:66:16: warning: ISO C++ forbids zero-size array ‘data’ [-Wpedantic]
+   66 |     sl_u8 data[0];
+      |                ^
+/tmp/oa06-workspace/src/sllidar_ros2/./sdk/include/sl_lidar_cmd.h:324:20: warning: ISO C++ forbids zero-size array ‘payload’ [-Wpedantic]
+  324 |     sl_u8  payload[0];
+      |                    ^
+---
+Finished <<< sllidar_ros2 [35.6s]
+
+Summary: 2 packages finished [7min 10s]
+  2 packages had stderr output: micro_ros_agent sllidar_ros2
