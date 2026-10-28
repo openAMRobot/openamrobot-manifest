@@ -17,6 +17,7 @@ ROS 2 packages land in `src/`; additional UI ROS packages are discovered under `
 `openamrobot.repos` remains the development manifest and may track branches.
 [`releases/v2.0.0-rc.1.repos`](releases/v2.0.0-rc.1.repos) is a separate candidate
 snapshot dated 2026-10-19. All 13 entries use full 40-character commit SHAs and
+snapshot dated 2026-10-19. All 11 entries use full 40-character commit SHAs and
 retain the development manifest's repository URLs and checkout paths.
 
 From this repository, validate the snapshot:
@@ -49,6 +50,8 @@ The shared component pins agree with the OA-05 candidate in
 [release PR #12](https://github.com/openAMRobot/openamrobot-release/pull/12).
 Both manifests now include the OA-06 driver sources; the release bundle also
 includes a separately pinned governance export.
+That bundle also includes separately pinned drivers and governance. Adding
+driver sources to this workspace is OA-06 and is handled separately.
 
 This snapshot is not final rc.1 acceptance. Package discovery exposes the known
 duplicate `openamr_ui_msgs` under `src/` and `ui/` (OA-08); the manifest does not
@@ -117,3 +120,15 @@ OpenAMRobot is a project initiated, operated, and controlled by **Botshare LTD**
 Original OpenAMRobot software and firmware are licensed under MIT, documentation under CC BY 4.0, and hardware design source under CERN-OHL-P-2.0, as mapped in [`LICENSING.md`](LICENSING.md). Public distribution grants the permissions stated in the applicable licence; it does not transfer ownership of underlying copyright, trademarks, patents, or other intellectual property.
 
 Accepted external contributions require DCO sign-off and an applicable Individual or Corporate Contributor Agreement. See the organization [IP Policy](https://github.com/openAMRobot/.github/blob/main/IP_POLICY.md), [Contribution Guide](https://github.com/openAMRobot/.github/blob/main/CONTRIBUTING.md), and [Contributor Agreement Process](https://github.com/openAMRobot/.github/blob/main/CLA.md).
+
+## ROS 2 CI image
+
+The candidate ROS 2 Jazzy CI image is pinned by its immutable
+OCI digest in [ci/ros2-image.txt](ci/ros2-image.txt).
+
+Use this exact image reference for reproducible contributor
+development and CI environments. The candidate is pending
+workspace integration and contributor-gate validation.
+
+The image pin is separate from openamrobot.repos, which tracks
+source repositories.
