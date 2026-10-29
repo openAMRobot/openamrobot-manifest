@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 import yaml
 
@@ -156,6 +157,111 @@ class ManifestCheckTest(unittest.TestCase):
 
     def test_rejects_empty_manifest(self):
         self.assert_semantic('repositories: {}\n', 'non-empty mapping')
+
+
+
+class TipBugFallbackTest(unittest.TestCase):
+    """vcstool 0.3.0 advertises a branch-tip SHA but crashes in validate."""
+
+    SHA = '34300099fadfc772965962dec837bf436706188f'
+    URL = 'https://example.org/lidar.git'
+    BUG = "UnboundLocalError: cannot access local variable 'version_type'"
+
+    def manifest(self, version=None, other=False):
+        repos = {
+            'src/lidar': {
+                'type': 'git',
+                'url': self.URL,
+                'version': version or self.SHA,
+            },
+        }
+        if other:
+            repos['src/other'] = {
+                'type': 'git', 'url': 'https://example.org/other.git',
+                'version': 'main',
+            }
+        with tempfile.NamedTemporaryFile(
+                'w', suffix='.repos', delete=False, encoding='utf-8') as tmp:
+            yaml.safe_dump({'repositories': repos}, tmp, sort_keys=False)
+        self.addCleanup(os.unlink, tmp.name)
+        return tmp.name
+
+    @staticmethod
+    def completed(cmd, code=0, out='', err=''):
+        return subprocess.CompletedProcess(cmd, code, stdout=out, stderr=err)
+
+    def fake_run(self, cmd, **kwargs):
+        if cmd[:2] == ['git', 'ls-remote']:
+            return self.completed(cmd, out=self.SHA + '\trefs/heads/main\n')
+        if cmd[0] != 'vcs':
+            raise AssertionError('unexpected subprocess command: %r' % cmd)
+        if kwargs.get('input') is None or 'src/lidar' in kwargs['input']:
+            return self.completed(cmd, 1, err=self.BUG)
+        return self.completed(cmd, 0, out='Found valid main branch')
+
+    def test_advertised_branch_tip_accepted_after_strict_revalidation(self):
+        with mock.patch.object(check_manifest.shutil, 'which',
+                               return_value='/usr/bin/tool'), \
+             mock.patch.object(check_manifest.subprocess, 'run',
+                               side_effect=self.fake_run) as run:
+            ok, detail = check_manifest.run_vcs_validate(self.manifest(other=True))
+        self.assertTrue(ok, detail)
+        self.assertIn('vcstool 0.3.0 tip bug', detail)
+        self.assertIn('src/other: vcs validate passed', detail)
+        self.assertTrue(any(call.args[0][:2] == ['git', 'ls-remote']
+                            for call in run.call_args_list))
+
+    def test_unknown_sha_does_not_pass_tip_workaround(self):
+        manifest = self.manifest(version='abcdef0123456789abcdef0123456789abcdef01')
+        with mock.patch.object(check_manifest.shutil, 'which',
+                               return_value='/usr/bin/tool'), \
+             mock.patch.object(check_manifest.subprocess, 'run',
+                               side_effect=self.fake_run):
+            ok, detail = check_manifest.run_vcs_validate(manifest)
+        self.assertFalse(ok)
+        self.assertIn('0 matching advertised ref-tip SHAs', detail)
+
+    def test_other_invalid_repo_not_masked_by_lidar_tip_crash(self):
+        def fake(cmd, **kwargs):
+            if cmd[0] == 'vcs' and kwargs.get('input') and \
+                    'src/other' in kwargs['input']:
+                return self.completed(cmd, 0, out=(
+                    "unable to verify non-branch / non-tag ref "
+                    "'no-such-branch'"))
+            return self.fake_run(cmd, **kwargs)
+
+        with mock.patch.object(check_manifest.shutil, 'which',
+                               return_value='/usr/bin/tool'), \
+             mock.patch.object(check_manifest.subprocess, 'run',
+                               side_effect=fake):
+            ok, detail = check_manifest.run_vcs_validate(self.manifest(other=True))
+        self.assertFalse(ok)
+        self.assertIn('src/other', detail)
+        self.assertIn('no-such-branch', detail)
+
+    def test_non_hex_branch_cannot_use_commit_tip_workaround(self):
+        with mock.patch.object(check_manifest.shutil, 'which',
+                               return_value='/usr/bin/tool'), \
+             mock.patch.object(check_manifest.subprocess, 'run',
+                               side_effect=self.fake_run):
+            ok, detail = check_manifest.run_vcs_validate(
+                self.manifest(version='main'))
+        self.assertFalse(ok)
+        self.assertIn('requires a hexadecimal commit SHA', detail)
+
+    def test_arbitrary_vcs_failure_never_triggers_workaround(self):
+        def fake(cmd, **kwargs):
+            return self.completed(cmd, 1, err='ERROR: network unreachable')
+
+        with mock.patch.object(check_manifest.shutil, 'which',
+                               return_value='/usr/bin/tool'), \
+             mock.patch.object(check_manifest.subprocess, 'run',
+                               side_effect=fake) as run:
+            ok, detail = check_manifest.run_vcs_validate(self.manifest())
+        self.assertFalse(ok)
+        self.assertIn('network unreachable', detail)
+        self.assertEqual(run.call_count, 1)
+
 
 
 if __name__ == '__main__':
