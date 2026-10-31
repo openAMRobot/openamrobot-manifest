@@ -14,3 +14,6 @@ repositories:
   hardware/openamr-upperbody-hw: { type: git, url: https://github.com/openAMRobot/openamr-upperbody-hw.git, version: main }
   ui/openamrobot-ui:            { type: git, url: https://github.com/openAMRobot/openamrobot-ui.git, version: main }
   docs/openamrobot-docs:        { type: git, url: https://github.com/openAMRobot/openamrobot-docs.git, version: main }
+  # Source dependencies unavailable as Jazzy apt/rosdep packages (OA-06).
+  src/sllidar_ros2: { type: git, url: https://github.com/Slamtec/sllidar_ros2.git, version: 34300099fadfc772965962dec837bf436706188f }
+  src/micro_ros_agent: { type: git, url: https://github.com/micro-ROS/micro-ROS-Agent.git, version: 7c932329ad5591ef23942ef1962534258c16b000 }

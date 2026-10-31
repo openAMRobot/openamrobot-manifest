@@ -1,0 +1,36 @@
+name: Jazzy source drivers
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  jazzy-source-drivers:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # Dedicated upstream check; migrate to the shared candidate after PR #13 adoption.
+    container:
+      image: ros:jazzy-ros-base@sha256:c3706ef0a0aa45413c07803cf433602f543b22e45b4855f6fca955c2d8ecc4e8
+    steps:
+      - name: Install build and import tools
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends build-essential cmake git python3-colcon-common-extensions python3-rosdep python3-vcstool python3-yaml
+      - uses: actions/checkout@v4
+      - name: Initialize Jazzy dependency index
+        run: |
+          if [ ! -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then rosdep init; fi
+          rosdep update --rosdistro jazzy
+      - name: Import, resolve, build and discover both installed drivers
+        shell: bash
+        run: |
+          bash tools/verify_jazzy_drivers.sh releases/v2.0.0-rc.1.repos "$RUNNER_TEMP/driver-workspace" "$RUNNER_TEMP/driver-evidence"
+          python3 tools/check_release_manifest.py releases/v2.0.0-rc.1.repos --development openamrobot.repos --exact-export "$RUNNER_TEMP/driver-evidence/exact.repos"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jazzy-source-driver-evidence
+          path: ${{ runner.temp }}/driver-evidence/

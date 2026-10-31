@@ -5,8 +5,8 @@ Stages, reported separately:
   1. yamllint  - YAML syntax with key-duplicates enabled (offline)
   2. strict    - strict loader rejecting duplicate keys, plus semantic checks
                  on the manifest structure (offline)
-  3. remote    - `vcs validate`: every URL is reachable and its version
-                 exists; a non-hex version vcs cannot find is an error
+  3. remote    - `vcs validate` for branches/tags; exact Git fetch and commit
+                 verification for full SHAs (avoids vcstool 0.3.0 issue #12)
                  (network; skipped only with --offline)
 
 A missing tool is an error, not a pass. Import (`vcs import`), package
@@ -21,6 +21,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 
 import yaml
 
@@ -34,6 +35,7 @@ REPO_FIELDS = {'type', 'url', 'version'}
 UNVERIFIED_REF = re.compile(
     r"unable to verify non-branch / non-tag ref '([^']*)'")
 COMMIT_LIKE = re.compile(r'^[0-9a-f]{7,40}$')
+ABBREVIATED_COMMIT = re.compile(r'^[0-9a-f]{7,39}$')
 VCSTOOL_TIP_BUG = re.compile(r'UnboundLocalError[^\n]*version_type')
 
 
@@ -139,11 +141,10 @@ def missing_refs(vcs_output):
             if not COMMIT_LIKE.match(ref)]
 
 
-
 def validate_advertised_branch_tip(url, version):
     """Verify pinned SHA against advertised remote tip, without a clone."""
-    if not COMMIT_LIKE.fullmatch(version):
-        return False, 'branch-tip workaround requires a hexadecimal commit SHA'
+    if not ABBREVIATED_COMMIT.fullmatch(version):
+        return False, 'branch-tip workaround requires an abbreviated hexadecimal commit SHA'
     if shutil.which('git') is None:
         return False, 'git not found on PATH (required for vcstool workaround)'
     try:
@@ -166,25 +167,17 @@ def validate_advertised_branch_tip(url, version):
         version, next(iter(matches)))
 
 
-def validate_tip_bug_fallback(manifest):
-    """Recheck each entry so one vcstool tip crash cannot mask invalid refs."""
-    try:
-        with open(manifest, encoding='utf-8') as stream:
-            data = yaml.load(stream, Loader=StrictLoader)
-    except (OSError, yaml.YAMLError) as exc:
-        return False, str(exc)
-    errors = semantic_errors(data)
-    if errors:
-        return False, '\n'.join(errors)
-
+def validate_tip_bug_fallback(repositories):
+    """Recheck only non-full-SHA entries after the known vcstool crash."""
     details = []
-    for path, entry in data['repositories'].items():
+    for path, entry in repositories.items():
         source = yaml.safe_dump({'repositories': {path: entry}},
                                 sort_keys=False)
         try:
-            proc = subprocess.run(
-                ['vcs', 'validate', '--retry', '2'], input=source,
-                capture_output=True, text=True, timeout=120)
+            with tempfile.TemporaryDirectory() as tmp:
+                proc = subprocess.run(
+                    ['vcs', 'validate', '--retry', '2'], input=source, cwd=tmp,
+                    capture_output=True, text=True, timeout=120)
         except (subprocess.TimeoutExpired, OSError) as exc:
             return False, "%s: vcstool invocation failed: %s" % (path, exc)
         out = proc.stdout + proc.stderr
@@ -204,15 +197,35 @@ def validate_tip_bug_fallback(manifest):
 
 
 def run_vcs_validate(manifest):
+    with open(manifest, encoding='utf-8') as stream:
+        data = yaml.load(stream, Loader=StrictLoader)
+    errors = semantic_errors(data)
+    if errors:
+        return False, '\n'.join(errors)
+    pinned = {name: entry for name, entry in data['repositories'].items()
+              if re.fullmatch(r'[0-9a-f]{40}', entry['version'])}
+    mutable = {name: entry for name, entry in data['repositories'].items()
+               if name not in pinned}
+    details = []
+    for name, entry in pinned.items():
+        passed, detail = verify_pinned_commit(entry)
+        details.append(f'{name}: {detail}')
+        if not passed:
+            return False, '\n'.join(details)
+    if not mutable:
+        return True, '\n'.join(details)
     if shutil.which('vcs') is None:
         return False, 'vcs not found on PATH (install vcstool)'
-    with open(manifest, encoding='utf-8') as stream:
+    # Validation must not inherit a caller's repository/worktree Git context.
+    with tempfile.TemporaryDirectory() as tmp:
         proc = subprocess.run(
-            ['vcs', 'validate', '--retry', '2'], stdin=stream,
+            ['vcs', 'validate', '--retry', '2'],
+            input=yaml.safe_dump({'repositories': mutable}), cwd=tmp,
             capture_output=True, text=True, timeout=600)
     output = proc.stdout + proc.stderr
     if proc.returncode != 0 and VCSTOOL_TIP_BUG.search(output):
-        return validate_tip_bug_fallback(manifest)
+        passed, detail = validate_tip_bug_fallback(mutable)
+        return passed, '\n'.join(details + [detail])
     if proc.returncode == 0:
         # Drop vcstool's pkg_resources deprecation noise; keep it on failure.
         output = '\n'.join(
@@ -222,7 +235,29 @@ def run_vcs_validate(manifest):
     if missing:
         output += '\nversion is not a branch, tag or commit hash: ' + \
             ', '.join(missing)
-    return proc.returncode == 0 and not missing, output.strip()
+    return proc.returncode == 0 and not missing, '\n'.join(details + [output.strip()])
+
+
+def verify_pinned_commit(entry):
+    """Prove a full SHA resolves to that exact commit; no ls-remote guesswork."""
+    if shutil.which('git') is None:
+        return False, 'git not found on PATH'
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            subprocess.run(['git', 'init', '-q', tmp], check=True,
+                           capture_output=True, text=True, timeout=30)
+            subprocess.run(['git', '-C', tmp, 'fetch', '--depth=1',
+                            entry['url'], entry['version']], check=True,
+                           capture_output=True, text=True, timeout=180)
+            proc = subprocess.run(
+                ['git', '-C', tmp, 'rev-parse', 'FETCH_HEAD^{commit}'],
+                check=True, capture_output=True, text=True, timeout=30)
+            actual = proc.stdout.strip()
+            if actual != entry['version']:
+                return False, 'fetched commit does not match requested SHA'
+            return True, 'verified commit ' + actual
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+        return False, str(exc) + '\n' + str(getattr(exc, 'stderr', '') or '')
 
 
 def main(argv=None):
@@ -230,7 +265,7 @@ def main(argv=None):
     parser.add_argument('manifest', nargs='?', default='openamrobot.repos')
     parser.add_argument(
         '--offline', action='store_true',
-        help='skip the network stage (vcs validate); reported as SKIPPED')
+        help='skip the network stage (vcs/Git); reported as SKIPPED')
     args = parser.parse_args(argv)
 
     stages = [('yamllint', run_yamllint), ('strict', run_strict)]
@@ -245,9 +280,10 @@ def main(argv=None):
             print('\n'.join('    ' + line for line in detail.splitlines()))
         ok = ok and passed
     if args.offline:
-        print('[SKIPPED] remote (vcs validate) - --offline given')
+        print('[SKIPPED] remote (vcs/Git) - --offline given')
     return 0 if ok else 1
 
 
 if __name__ == '__main__':
     sys.exit(main())
+

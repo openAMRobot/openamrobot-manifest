@@ -44,3 +44,11 @@ repositories:
     type: git
     url: https://github.com/openAMRobot/openamrobot-docs.git
     version: 95c6140e16866964a7d6fddd37e06cd382b7afae
+  src/sllidar_ros2:
+    type: git
+    url: https://github.com/Slamtec/sllidar_ros2.git
+    version: 34300099fadfc772965962dec837bf436706188f
+  src/micro_ros_agent:
+    type: git
+    url: https://github.com/micro-ROS/micro-ROS-Agent.git
+    version: 7c932329ad5591ef23942ef1962534258c16b000
