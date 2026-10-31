@@ -35,6 +35,8 @@ REPO_FIELDS = {'type', 'url', 'version'}
 UNVERIFIED_REF = re.compile(
     r"unable to verify non-branch / non-tag ref '([^']*)'")
 COMMIT_LIKE = re.compile(r'^[0-9a-f]{7,40}$')
+ABBREVIATED_COMMIT = re.compile(r'^[0-9a-f]{7,39}$')
+VCSTOOL_TIP_BUG = re.compile(r'UnboundLocalError[^\n]*version_type')
 
 
 class StrictLoader(yaml.SafeLoader):
@@ -139,6 +141,61 @@ def missing_refs(vcs_output):
             if not COMMIT_LIKE.match(ref)]
 
 
+def validate_advertised_branch_tip(url, version):
+    """Verify pinned SHA against advertised remote tip, without a clone."""
+    if not ABBREVIATED_COMMIT.fullmatch(version):
+        return False, 'branch-tip workaround requires an abbreviated hexadecimal commit SHA'
+    if shutil.which('git') is None:
+        return False, 'git not found on PATH (required for vcstool workaround)'
+    try:
+        proc = subprocess.run(
+            ['git', 'ls-remote', url], capture_output=True, text=True, timeout=120)
+    except (subprocess.TimeoutExpired, OSError) as exc:
+        return False, 'git ls-remote failed: %s' % exc
+    if proc.returncode != 0:
+        return False, 'git ls-remote exited %d: %s' % (
+            proc.returncode, proc.stderr.strip())
+    advertised = {
+        line.split()[0] for line in proc.stdout.splitlines()
+        if line.split() and re.fullmatch(r'[0-9a-f]{40}', line.split()[0])
+    }
+    matches = {sha for sha in advertised if sha.startswith(version)}
+    if len(matches) != 1:
+        return False, ('pinned hash %s has %d matching advertised ref-tip SHAs'
+                       % (version, len(matches)))
+    return True, 'pinned %s resolves to advertised tip %s' % (
+        version, next(iter(matches)))
+
+
+def validate_tip_bug_fallback(repositories):
+    """Recheck only non-full-SHA entries after the known vcstool crash."""
+    details = []
+    for path, entry in repositories.items():
+        source = yaml.safe_dump({'repositories': {path: entry}},
+                                sort_keys=False)
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                proc = subprocess.run(
+                    ['vcs', 'validate', '--retry', '2'], input=source, cwd=tmp,
+                    capture_output=True, text=True, timeout=120)
+        except (subprocess.TimeoutExpired, OSError) as exc:
+            return False, "%s: vcstool invocation failed: %s" % (path, exc)
+        out = proc.stdout + proc.stderr
+        missing = missing_refs(out)
+        if proc.returncode == 0 and not missing:
+            details.append('%s: vcs validate passed' % path)
+            continue
+        if VCSTOOL_TIP_BUG.search(out) and proc.returncode != 0:
+            ok, note = validate_advertised_branch_tip(
+                entry['url'], entry['version'])
+            if not ok:
+                return False, '%s: %s' % (path, note)
+            details.append('%s: vcstool 0.3.0 tip bug; %s' % (path, note))
+            continue
+        return False, '%s: vcs validate rejected ref: %s' % (path, out.strip())
+    return True, '\n'.join(details)
+
+
 def run_vcs_validate(manifest):
     with open(manifest, encoding='utf-8') as stream:
         data = yaml.load(stream, Loader=StrictLoader)
@@ -166,6 +223,9 @@ def run_vcs_validate(manifest):
             input=yaml.safe_dump({'repositories': mutable}), cwd=tmp,
             capture_output=True, text=True, timeout=600)
     output = proc.stdout + proc.stderr
+    if proc.returncode != 0 and VCSTOOL_TIP_BUG.search(output):
+        passed, detail = validate_tip_bug_fallback(mutable)
+        return passed, '\n'.join(details + [detail])
     if proc.returncode == 0:
         # Drop vcstool's pkg_resources deprecation noise; keep it on failure.
         output = '\n'.join(
@@ -226,3 +286,4 @@ def main(argv=None):
 
 if __name__ == '__main__':
     sys.exit(main())
+
