@@ -68,6 +68,8 @@ Both manifests include these source-only dependencies:
 `sllidar_ros2` drives the 2.0 navigation LiDAR, the SLAMTEC RPLIDAR S3
 (S3M1-R2), over USB through a USB to UART adapter at 1,000,000 baud; it
 publishes `/scan` in `lidar_link`.
+`micro_ros_agent` connects the base controller: micro-ROS runs over UDP on
+Ethernet between the MCU and the Jetson; USB is for the bench only.
 
 For these packages, source import replaces attempts to install the driver
 itself through apt or a rosdep rule. Rosdep still installs their declared
