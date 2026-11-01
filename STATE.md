@@ -36,6 +36,9 @@ Conflict resolution retains the 13-entry manifests and driver instructions;
 no source pins changed. Full 40-character pins bypass vcstool validation.
 Abbreviated SHAs still use vcstool, so issue #12 is not claimed fully closed.
 
+Alignment of 1 Nov 2026 (openAMRobot/.github#79): README driver notes and the
+#11 note above, text only; no .repos file or pin changed.
+
 Validation separates YAML/schema, immutable refs, source import, exact export,
 package discovery and component builds. No hardware or safety implementation
 is changed. Full workspace build and robot acceptance remain unverified here.
