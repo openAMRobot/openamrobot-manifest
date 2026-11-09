@@ -26,8 +26,7 @@ a separately pinned governance source outside the workspace scope.
 
 The snapshot demonstrates a pinned checkout, not rc.1 acceptance. The final
 release selection requires owner review and updates as outstanding fixes land.
-Manifest PR #11's sllidar_ros2 pin is already on main (same commit, since #18);
-closing or rebasing #11 is the owner's decision.
+Manifest PR #11 was closed as duplicate; its LiDAR pin was already merged through #18.
 PR #13 has merged its ci/ros2-image.txt baseline; that file is preserved.
 The dedicated driver job still uses its recorded upstream ROS digest.
 
