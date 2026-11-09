@@ -38,3 +38,14 @@ Abbreviated SHAs still use vcstool, so issue #12 is not claimed fully closed.
 Validation separates YAML/schema, immutable refs, source import, exact export,
 package discovery and component builds. No hardware or safety implementation
 is changed. Full workspace build and robot acceptance remain unverified here.
+
+
+## Issue #12 abbreviated commit validation (31 Oct 2026)
+
+PR #19 integrates main d9ab9db, including #18's 13-entry manifests and exact
+fetch verification for full SHAs. Only abbreviated SHA failures matching the
+vcstool 0.3.0 version_type crash use the advertised-tip fallback. Every entry
+is rechecked from an isolated temporary directory; ambiguous prefixes, missing
+refs, network failures and timeouts fail closed. The CLI remains executable.
+Regression evidence is recorded in PR #19; live import and driver-build results
+are separate hosted checks, never inferred from the unit tests.
