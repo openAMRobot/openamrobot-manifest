@@ -12,8 +12,16 @@ The development manifest is unchanged.
 
 This is still a candidate snapshot, not rc.1 acceptance. The final selection
 needs owner review. Known open items: the duplicate `openamr_ui_msgs` provider
-(OA-08); upper-body-sw #48 (mass re-pin, Gazebo A7 red); openamrobot-release
-PR #12, which still lists the 19 Oct component revisions.
+(OA-08); upper-body-sw #48 (mass re-pin; head a9d3349 has A6 and A7 passed,
+review changes requested); openamrobot-release PR #12, which still lists the
+19 Oct component revisions.
+
+Cross-pin check: `tools/check_upstream_pins.py` runs on the imported rc.1
+workspace in manifest-validation and fails when upper-body-sw's
+`upstream_pins.yaml` names another platform-sw commit than the manifest. It
+fails on this candidate: upper-body-sw `2ca7392` records platform-sw `131e500`,
+the manifest pins `713574f`. The upper-body pin moves to the #48 merge commit
+once #48 merges; until then this PR stays draft and red.
 
 ## OA-06 source drivers
 

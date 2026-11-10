@@ -47,6 +47,7 @@ jobs:
           vcs import "$RUNNER_TEMP/rc1-workspace" < releases/v2.0.0-rc.1.repos
           vcs export --exact "$RUNNER_TEMP/rc1-workspace" > "$RUNNER_TEMP/rc1-exact.repos"
           python tools/check_release_manifest.py releases/v2.0.0-rc.1.repos --exact-export "$RUNNER_TEMP/rc1-exact.repos"
+          python tools/check_upstream_pins.py releases/v2.0.0-rc.1.repos --workspace "$RUNNER_TEMP/rc1-workspace"
 
       - uses: actions/upload-artifact@v4
         with:
