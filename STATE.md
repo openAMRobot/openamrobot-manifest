@@ -1,5 +1,20 @@
 # Manifest state
 
+## rc.1 candidate refresh (10 Nov 2026)
+
+`releases/v2.0.0-rc.1.repos` moves the eleven OpenAMRobot entries from the
+2026-10-19 heads to the heads of main on 2026-11-10. Nine pins change, among
+them platform-sw `713574f` (map persistence #114, map saving #115, base masses
+#126), upper-body-sw `2ca7392` (combined base, lift and arms model with MoveIt,
+#14) and ui `0ca798b`. The two firmware pins are unchanged, because both mains
+are unchanged since 12 Oct. The two upstream drivers keep their OA-05 pins.
+The development manifest is unchanged.
+
+This is still a candidate snapshot, not rc.1 acceptance. The final selection
+needs owner review. Known open items: the duplicate `openamr_ui_msgs` provider
+(OA-08); upper-body-sw #48 (mass re-pin, Gazebo A7 red); openamrobot-release
+PR #12, which still lists the 19 Oct component revisions.
+
 ## OA-06 source drivers
 
 The development and rc.1 manifests now contain 13 entries, adding pinned
