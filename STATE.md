@@ -1,5 +1,38 @@
 # Manifest state
 
+## PR #22 strict upstream YAML (13 Nov 2026)
+
+Reuse the manifest StrictLoader for upstream_pins.yaml and report duplicate
+mapping keys as validation errors. Regression controls cover duplicate nested
+platform keys and duplicate top-level pins keys, including a matching last
+value that previously hid a conflicting first pin. Both controls failed before
+the fix. No release pins change. The candidate stays draft pending upperbody
+#48, owner release selection and Gate A acceptance; release #12 retains its
+19 October snapshot. Codex assisted this validator change and its tests.
+
+## rc.1 candidate refresh (10 Nov 2026)
+
+`releases/v2.0.0-rc.1.repos` moves the eleven OpenAMRobot entries from the
+2026-10-19 heads to the heads of main on 2026-11-10. Nine pins change, among
+them platform-sw `713574f` (map persistence #114, map saving #115, base masses
+#126), upper-body-sw `2ca7392` (combined base, lift and arms model with MoveIt,
+#14) and ui `0ca798b`. The two firmware pins are unchanged, because both mains
+are unchanged since 12 Oct. The two upstream drivers keep their OA-05 pins.
+The development manifest is unchanged.
+
+This is still a candidate snapshot, not rc.1 acceptance. The final selection
+needs owner review. Known open items: the duplicate `openamr_ui_msgs` provider
+(OA-08); upper-body-sw #48 (mass re-pin; head a9d3349 has A6 and A7 passed,
+review changes requested); openamrobot-release PR #12, which still lists the
+19 Oct component revisions.
+
+Cross-pin check: `tools/check_upstream_pins.py` runs on the imported rc.1
+workspace in manifest-validation and fails when upper-body-sw's
+`upstream_pins.yaml` names another platform-sw commit than the manifest. It
+fails on this candidate: upper-body-sw `2ca7392` records platform-sw `131e500`,
+the manifest pins `713574f`. The upper-body pin moves to the #48 merge commit
+once #48 merges; until then this PR stays draft and red.
+
 ## OA-06 source drivers
 
 The development and rc.1 manifests now contain 13 entries, adding pinned
