@@ -1,5 +1,15 @@
 # Manifest state
 
+## PR #22 strict upstream YAML (13 Nov 2026)
+
+Reuse the manifest StrictLoader for upstream_pins.yaml and report duplicate
+mapping keys as validation errors. Regression controls cover duplicate nested
+platform keys and duplicate top-level pins keys, including a matching last
+value that previously hid a conflicting first pin. Both controls failed before
+the fix. No release pins change. The candidate stays draft pending upperbody
+#48, owner release selection and Gate A acceptance; release #12 retains its
+19 October snapshot. Codex assisted this validator change and its tests.
+
 ## rc.1 candidate refresh (10 Nov 2026)
 
 `releases/v2.0.0-rc.1.repos` moves the eleven OpenAMRobot entries from the

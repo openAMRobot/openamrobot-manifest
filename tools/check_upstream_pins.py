@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 import yaml
+from check_manifest import StrictLoader
 from check_release_manifest import load_release
 
 # (repository holding the pins file, path inside it, pin key, manifest repository the key names)
@@ -32,7 +33,12 @@ def cross_pin_errors(repos, workspace):
         if not path.is_file():
             errors.append(f'{holder}: {rel} not found in the workspace (import the release first)')
             continue
-        pins = (yaml.safe_load(path.read_text(encoding='utf-8')) or {}).get('pins') or {}
+        try:
+            data = yaml.load(path.read_text(encoding='utf-8'), Loader=StrictLoader) or {}
+        except yaml.YAMLError as exc:
+            errors.append(f'{holder}: invalid {rel}: {exc}')
+            continue
+        pins = data.get('pins') or {}
         recorded = str(pins.get(key, ''))
         expected = repos[target]['version']
         if recorded != expected:

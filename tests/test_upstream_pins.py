@@ -22,6 +22,16 @@ def workspace(tmp, recorded):
 
 
 class CrossPinTests(unittest.TestCase):
+    def test_duplicate_upstream_keys_fail_closed(self):
+        for text in (
+            f'pins:\n  {KEY}: "{B}"\n  {KEY}: "{A}"\n',
+            f'pins:\n  {KEY}: "{B}"\npins:\n  {KEY}: "{A}"\n',
+        ):
+            with self.subTest(text=text), tempfile.TemporaryDirectory() as tmp:
+                workspace(tmp, A)
+                (Path(tmp) / HOLDER / REL).write_text(text, encoding='utf-8')
+                self.assertRegex(' '.join(cross_pin_errors(repos(A), tmp)), 'duplicate key')
+
     def test_matching_pin_passes(self):
         with tempfile.TemporaryDirectory() as tmp:
             self.assertEqual(cross_pin_errors(repos(A), workspace(tmp, A)), [])
