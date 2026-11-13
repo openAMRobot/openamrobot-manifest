@@ -26,14 +26,17 @@ a separately pinned governance source outside the workspace scope.
 
 The snapshot demonstrates a pinned checkout, not rc.1 acceptance. The final
 release selection requires owner review and updates as outstanding fixes land.
-Manifest PR #11 proposes LiDAR source selection and is not superseded here.
+Manifest PR #11 was closed as duplicate; the sllidar_ros2 pin 34300099 is on main through #18.
 PR #13 has merged its ci/ros2-image.txt baseline; that file is preserved.
 The dedicated driver job still uses its recorded upstream ROS digest.
 
 Integrated main at 80161e5 on 2026-10-28 after the #17 squash merge.
 Conflict resolution retains the 13-entry manifests and driver instructions;
 no source pins changed. Full 40-character pins bypass vcstool validation.
-Abbreviated SHAs still use vcstool, so issue #12 is not claimed fully closed.
+Issue #12 closed with #19 (merged 2026-11-09): abbreviated SHAs use the advertised-tip fallback.
+
+Alignment of 1 Nov 2026 (openAMRobot/.github#79): README driver notes and the
+#11 note above, text only; no .repos file or pin changed.
 
 Validation separates YAML/schema, immutable refs, source import, exact export,
 package discovery and component builds. No hardware or safety implementation
