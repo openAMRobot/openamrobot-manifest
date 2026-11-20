@@ -1,5 +1,13 @@
 # Manifest state
 
+## v2.0.0-rc.1 pins (2026-11-20)
+
+`releases/v2.0.0-rc.1.repos` moves from the 2026-10-19 candidate to the reviewed
+main of each repository read on 2026-11-20, the same SHAs as
+openamrobot-release `manifests/v2.0.0-rc.1.repos` (its parity check requires
+it). openamrobot-embodied-ai joins both manifests, so they hold 14 entries; the
+two counting tests follow. Source pins only, not release acceptance.
+
 ## OA-06 source drivers
 
 The development and rc.1 manifests now contain 13 entries, adding pinned

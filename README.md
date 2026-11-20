@@ -16,7 +16,7 @@ ROS 2 packages land in `src/`; additional UI ROS packages are discovered under `
 
 `openamrobot.repos` remains the development manifest and may track branches.
 [`releases/v2.0.0-rc.1.repos`](releases/v2.0.0-rc.1.repos) is a separate candidate
-snapshot dated 2026-10-19. All 13 entries use full 40-character commit SHAs and
+snapshot of the reviewed main of each repository, read 2026-11-20 (v2.0.0-rc.1). All 14 entries use full 40-character commit SHAs and
 retain the development manifest's repository URLs and checkout paths.
 
 From this repository, validate the snapshot:
