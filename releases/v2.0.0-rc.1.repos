@@ -1,25 +1,25 @@
-# Candidate snapshot: 2026-10-19. Not release acceptance.
+# Candidate snapshot: 2026-11-10 (heads of main). Not release acceptance.
 repositories:
   src/openamrobot-interfaces:
     type: git
     url: https://github.com/openAMRobot/openamrobot-interfaces.git
-    version: 87ab8a936c97ab55ee74b8988ca3d7659160ea6a
+    version: 14912e18ecb6473ebd7ef4a42c4bd1870b2023f6
   src/openamrobot-comm:
     type: git
     url: https://github.com/openAMRobot/openamrobot-comm.git
-    version: 1c552921cf05001ee8f43e899aa2f92882766f07
+    version: 73fa694aa60594f1f99e813741d8f744ee302f8a
   src/openamrobot-manipulation:
     type: git
     url: https://github.com/openAMRobot/openamrobot-manipulation.git
-    version: 095e6c7bbd270db6d21de9664a654bb37919a2eb
+    version: be76d30632f01aab2badddf4e33de829c113b1b7
   src/openamr-platform-sw:
     type: git
     url: https://github.com/openAMRobot/openamr-platform-sw.git
-    version: 8a7a5b136bfb3f144b57991455b378f6b3f4113c
+    version: 713574fd2a5a9e38cde6b07c5b96ac4f380b3402
   src/openamr-upperbody-sw:
     type: git
     url: https://github.com/openAMRobot/openamr-upperbody-sw.git
-    version: f57e54cfc9e7f9536e94c52749502cc983fb908e
+    version: 2ca739202f5c51114de1520902e811817d9b2a62
   firmware/openamr-platform-fw:
     type: git
     url: https://github.com/openAMRobot/openamr-platform-fw.git
@@ -31,19 +31,19 @@ repositories:
   hardware/openamr-platform-hw:
     type: git
     url: https://github.com/openAMRobot/openamr-platform-hw.git
-    version: 6c32fbabfd08491e74a9a2f601f1e14d07d44938
+    version: 8ed2b06a46115abe2dffadbf0d902ae731d278d1
   hardware/openamr-upperbody-hw:
     type: git
     url: https://github.com/openAMRobot/openamr-upperbody-hw.git
-    version: 6349ff2672c9e812655d3ae1d04c67130fb3cac7
+    version: e760126b2b79611e0a915ab2bc11e15afb22cd8b
   ui/openamrobot-ui:
     type: git
     url: https://github.com/openAMRobot/openamrobot-ui.git
-    version: c5558ad5babdab30702c307a08fc94a6408c798c
+    version: 0ca798b424cadbb77d6791f5298bb4f7e0f37a89
   docs/openamrobot-docs:
     type: git
     url: https://github.com/openAMRobot/openamrobot-docs.git
-    version: 95c6140e16866964a7d6fddd37e06cd382b7afae
+    version: 86c706bdc8a2edc0607ad1b9aa2d2b48fc01c80d
   src/sllidar_ros2:
     type: git
     url: https://github.com/Slamtec/sllidar_ros2.git
