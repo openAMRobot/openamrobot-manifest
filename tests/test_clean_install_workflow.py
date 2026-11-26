@@ -22,6 +22,13 @@ class CleanInstallWorkflowTests(unittest.TestCase):
             with self.subTest(launch=index):
                 self.assertIn('headless:=true', shlex.split(arguments), 'Gazebo must not try to open a GUI on the runner')
 
+    def test_the_arm_demo_uses_the_engine_the_fast_profile_arms_are_qualified_with(self):
+        text = (ROOT / '.github/workflows/digital-twin-clean-install.yml').read_text(encoding='utf-8')
+        second = text[text.index('launch2.log') - 600:text.index('launch2.log')]
+        self.assertIn('physics_engine:=gz-physics-bullet-featherstone-plugin', second)
+        self.assertIn('run_scenario.py scn04_grasp', text)
+        self.assertNotIn('run_scenario.py scn03_arms_reach', text)
+
 
 if __name__ == '__main__':
     unittest.main()

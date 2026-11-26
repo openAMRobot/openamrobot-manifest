@@ -101,11 +101,15 @@ jobs:
           echo "=== last lines of the launch log"; tail -n 40 "$RUNNER_TEMP/launch.log"
           # Second launch in the same environment, robot at the work shelf, for the arm demonstration.
           arms=0
-          setsid ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast station:=work_shelf sensors:=false nav2:=false headless:=true \
-            > "$RUNNER_TEMP/launch2.log" 2>&1 &
+          # Arguments of the scene test scn15_grasp_fast of the pinned upperbody commit. In the fast profile the arms are
+          # only qualified with the Bullet Featherstone engine: with the default engine (DART) joint 4 on its lower limit
+          # does not move although the controller reports success (openamr-upperbody-sw #126; run 45815162637 showed it
+          # as left_park_joints_not_moved = 2 with scn03_arms_reach, which the scene tests run in the device profile only).
+          setsid ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast station:=work_shelf sensors:=false nav2:=false \
+            moveit:=true physics_engine:=gz-physics-bullet-featherstone-plugin headless:=true > "$RUNNER_TEMP/launch2.log" 2>&1 &
           launch2_pid=$!
-          timeout 900 ros2 run openamrobot_build1_scene run_scenario.py scn03_arms_reach --log-dir "$RUNNER_TEMP/demo" || arms=$?
-          echo "DEMO scn03_arms_reach on the second launch, exit code $arms (0 PASS, 1 FAIL, 3 BLOCKED, 124 timeout)"
+          timeout 1200 ros2 run openamrobot_build1_scene run_scenario.py scn04_grasp --log-dir "$RUNNER_TEMP/demo" || arms=$?
+          echo "DEMO scn04_grasp (both arms and grippers) on the second launch, exit code $arms (0 PASS, 1 FAIL, 3 BLOCKED, 124 timeout)"
           kill -INT -- "-$launch2_pid" 2> /dev/null || true
           shutdown2=forced
           for second in $(seq 1 90); do kill -0 "$launch2_pid" 2> /dev/null || { shutdown2="clean after ${second} s"; break; }; sleep 1; done

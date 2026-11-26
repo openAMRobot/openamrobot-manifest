@@ -77,3 +77,7 @@ import of the profile, exact export matches, 26 package names, no duplicate. Not
 uses headless:=true, matching the first launch and avoiding Qt/xcb display failure
 on runners. Regression test fails on the previous workflow and passes with the
 fix. Candidate source/profile pins unchanged; hosted checks must rerun.
+2026-11-26: clean-install arm demonstration. Run 45815162637 failed `scn03_arms_reach` in the `fast` profile with
+`left_park_joints_not_moved = 2`: the default engine (DART) leaves joint 4 on its lower limit (openamr-upperbody-sw #126).
+Not a relaunch defect. The second launch now uses the arguments of the scene test `scn15_grasp_fast` (Bullet Featherstone)
+and runs `scn04_grasp`; `tests/test_clean_install_workflow.py` holds that.
