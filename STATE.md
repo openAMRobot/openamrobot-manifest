@@ -73,6 +73,14 @@ manifest and with the acceptance configuration, unique package providers. Local 
 import of the profile, exact export matches, 26 package names, no duplicate. Not verified here: build, launch, gates
 (reported on openamrobot-release#18). The other entries of the full file keep their pins of 20 Nov.
 
+### Candidate 2 pins (26 Nov 2026)
+
+Both files now pin platform `2ac4070` (openamr-platform-sw#211: SIL effective track 0.411 m, a calibration of the
+twin; model keeps 0.400) and upperbody `6687f65` (openamr-upperbody-sw#146: platform and model pins on that commit,
+spawn height 0.0). The paragraph above describes candidate 1 and is kept as history. Local evidence: 58 unit tests
+pass; `check_profile.py --strict-model-pin` against the upperbody tree at `6687f65` passes (model pin equals the
+platform pin); yamllint clean. Not verified here: clean install on these pins (hosted check on this pull request).
+
 2026-11-26: clean-install second-launch CI fix. The arm-demo launch now explicitly
 uses headless:=true, matching the first launch and avoiding Qt/xcb display failure
 on runners. Regression test fails on the previous workflow and passes with the
