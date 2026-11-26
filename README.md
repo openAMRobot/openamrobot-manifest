@@ -34,7 +34,17 @@ bash tools/bootstrap_digital_twin.sh ~/oamr_dt_ws
 The script adds the ROS 2 apt source, installs ROS 2 Jazzy and the Gazebo Harmonic builds the release was tested on,
 imports the six repositories at their pinned commits, checks the result, installs the dependencies and builds. At the
 end it prints the commands to start the twin. If the tested Gazebo builds are no longer in the apt index it installs the
-current ones and says so. Then, in every new terminal:
+current ones and says so.
+
+What the script leaves on your machine besides the workspace: the ROS 2 apt source, the installed packages, and an
+`apt-mark hold` on three Gazebo packages (`ros-jazzy-gz-sim-vendor`, `ros-jazzy-gz-tools-vendor`,
+`ros-jazzy-sdformat-vendor`). The hold keeps `apt upgrade` from replacing the builds the release was tested on. It is
+only set when those tested builds were installed; in the fallback case (current builds, with a warning) nothing is
+held. Inspect it with `apt-mark showhold` and release it with
+`sudo apt-mark unhold ros-jazzy-gz-sim-vendor ros-jazzy-gz-tools-vendor ros-jazzy-sdformat-vendor`.
+`OAMR_GZ_PIN=strict bash tools/bootstrap_digital_twin.sh ...` stops with an error instead of falling back.
+
+Now, in every new terminal:
 
 ```bash
 source /opt/ros/jazzy/setup.bash
