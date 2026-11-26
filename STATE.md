@@ -65,8 +65,9 @@ are separate hosted checks, never inferred from the unit tests.
 ## v2.0.0-rc.1 final pins and supported profile (26 Nov 2026)
 
 `releases/v2.0.0-rc.1.repos`: platform `ddd20ab` (branch `release/2.0.0-rc.1`, `334e0ad` plus the documentation-only
-cleanup openamr-platform-sw#210; platform `main` with #204 is not used) and the upperbody candidate of
-openamr-upperbody-sw#144. New `releases/v2.0.0-rc.1-digital-twin.repos`: the supported installation, six repositories
+cleanup openamr-platform-sw#210; platform `main` with #204 is not used) and upperbody `1ab45a6` (branch `release/2.0.0-rc.1`,
+the merge of openamr-upperbody-sw#144; same tree as the tested head `729be2a`). Hardware `3394123` and UI `2cf9179`
+are the merges of the publication cleanups (openamr-platform-hw#44, openamrobot-ui#65); both are source snapshots outside the supported profile. New `releases/v2.0.0-rc.1-digital-twin.repos`: the supported installation, six repositories
 as the acceptance workflow builds them. New `tools/check_profile.py` with tests: pin agreement with the release
 manifest and with the acceptance configuration, unique package providers. Local evidence: 53 unit tests pass (11 of them new); fresh
 import of the profile, exact export matches, 26 package names, no duplicate. Not verified here: build, launch, gates

@@ -6,7 +6,7 @@ repositories:
   src/openamr-upperbody-sw:
     type: git
     url: https://github.com/openAMRobot/openamr-upperbody-sw.git
-    version: 729be2a1287b9199e54dfd162aa44b33810b3461
+    version: 1ab45a62957d238fc293eee08a8fd9158acebb01
   src/openamr-platform-sw:
     type: git
     url: https://github.com/openAMRobot/openamr-platform-sw.git
