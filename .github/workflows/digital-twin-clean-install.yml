@@ -40,7 +40,8 @@ jobs:
         run: |
           source /opt/ros/jazzy/setup.bash
           source "$HOME/oamr_dt_ws/install/setup.bash"
-          ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast headless:=true > "$RUNNER_TEMP/launch.log" 2>&1 &
+          # setsid: the launch gets its own process group, so the interrupt below reaches every process of it, as Ctrl+C in a terminal does.
+          setsid ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast headless:=true > "$RUNNER_TEMP/launch.log" 2>&1 &
           launch_pid=$!
           probe=0
           python3 - <<'PY' || probe=$?
@@ -90,23 +91,25 @@ jobs:
             demo=1; lift=1; echo "DEMO not run because the probe failed"
           fi
           # Shutdown as a user does it: one interrupt to the launch. Reported, with the time it took.
-          kill -INT "$launch_pid" 2> /dev/null || true
+          kill -INT -- "-$launch_pid" 2> /dev/null || true
           shutdown=forced
-          for second in $(seq 1 40); do kill -0 "$launch_pid" 2> /dev/null || { shutdown="clean after ${second} s"; break; }; sleep 1; done
-          kill -KILL "$launch_pid" 2> /dev/null || true
-          echo "SHUTDOWN first launch: $shutdown"
+          for second in $(seq 1 90); do kill -0 "$launch_pid" 2> /dev/null || { shutdown="clean after ${second} s"; break; }; sleep 1; done
+          kill -KILL -- "-$launch_pid" 2> /dev/null || true
+          sleep 2
+          echo "SHUTDOWN first launch: $shutdown; processes of the launch still alive: $(pgrep -g "$launch_pid" | wc -l)"
+          grep -c "user interrupted\|SIGINT" "$RUNNER_TEMP/launch.log" | sed 's/^/interrupt lines in the launch log: /' 
           echo "=== last lines of the launch log"; tail -n 40 "$RUNNER_TEMP/launch.log"
           # Second launch in the same environment, robot at the work shelf, for the arm demonstration.
           arms=0
-          ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast station:=work_shelf sensors:=false nav2:=false \
+          setsid ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast station:=work_shelf sensors:=false nav2:=false \
             > "$RUNNER_TEMP/launch2.log" 2>&1 &
           launch2_pid=$!
           timeout 900 ros2 run openamrobot_build1_scene run_scenario.py scn03_arms_reach --log-dir "$RUNNER_TEMP/demo" || arms=$?
           echo "DEMO scn03_arms_reach on the second launch, exit code $arms (0 PASS, 1 FAIL, 3 BLOCKED, 124 timeout)"
-          kill -INT "$launch2_pid" 2> /dev/null || true
+          kill -INT -- "-$launch2_pid" 2> /dev/null || true
           shutdown2=forced
-          for second in $(seq 1 40); do kill -0 "$launch2_pid" 2> /dev/null || { shutdown2="clean after ${second} s"; break; }; sleep 1; done
-          kill -KILL "$launch2_pid" 2> /dev/null || true
+          for second in $(seq 1 90); do kill -0 "$launch2_pid" 2> /dev/null || { shutdown2="clean after ${second} s"; break; }; sleep 1; done
+          kill -KILL -- "-$launch2_pid" 2> /dev/null || true
           echo "SHUTDOWN second launch: $shutdown2"
           echo "=== last lines of the second launch log"; tail -n 30 "$RUNNER_TEMP/launch2.log"
           echo "RESULT probe $probe drive $demo lift $lift arms $arms shutdown '$shutdown' / '$shutdown2'"
