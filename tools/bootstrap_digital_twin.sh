@@ -6,7 +6,8 @@
 #   bash tools/bootstrap_digital_twin.sh [WORKSPACE] [PROFILE]
 #
 # WORKSPACE defaults to ~/oamr_dt_ws, PROFILE to releases/v2.0.0-rc.1-digital-twin.repos beside this script.
-# Needs sudo for apt. Simulation only: nothing here is hardware, physical acceptance or safety evidence.
+# Needs sudo for apt package installation and rosdep init only. OAMR_GZ_PIN=strict makes a missing tested
+# Gazebo build an error instead of a warning (CI uses strict). Simulation only: nothing here is hardware, physical acceptance or safety evidence.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -37,9 +38,25 @@ sudo rosdep init 2> /dev/null || echo "rosdep init: already initialized"
 
 step "2/6 Gazebo Harmonic, pinned vendor builds"
 sudo apt-mark unhold ros-jazzy-gz-sim-vendor ros-jazzy-gz-tools-vendor ros-jazzy-sdformat-vendor > /dev/null 2>&1 || true
-sudo apt-get install -y --allow-downgrades \
-  "ros-jazzy-gz-sim-vendor=${GZ_SIM_VENDOR}" "ros-jazzy-gz-tools-vendor=${GZ_TOOLS_VENDOR}" "ros-jazzy-sdformat-vendor=${SDFORMAT_VENDOR}"
-sudo apt-mark hold ros-jazzy-gz-sim-vendor ros-jazzy-gz-tools-vendor ros-jazzy-sdformat-vendor
+pinned_available=1
+for spec in "ros-jazzy-gz-sim-vendor=${GZ_SIM_VENDOR}" "ros-jazzy-gz-tools-vendor=${GZ_TOOLS_VENDOR}" "ros-jazzy-sdformat-vendor=${SDFORMAT_VENDOR}"; do
+  apt-cache madison "${spec%%=*}" | awk '{print $3}' | grep -qxF "${spec#*=}" || { pinned_available=0; echo "not in the apt index: $spec"; }
+done
+if [ "$pinned_available" -eq 1 ]; then
+  sudo apt-get install -y --allow-downgrades \
+    "ros-jazzy-gz-sim-vendor=${GZ_SIM_VENDOR}" "ros-jazzy-gz-tools-vendor=${GZ_TOOLS_VENDOR}" "ros-jazzy-sdformat-vendor=${SDFORMAT_VENDOR}"
+  sudo apt-mark hold ros-jazzy-gz-sim-vendor ros-jazzy-gz-tools-vendor ros-jazzy-sdformat-vendor
+elif [ "${OAMR_GZ_PIN:-warn}" = "strict" ]; then
+  echo "ERROR: the tested Gazebo vendor builds are no longer in the apt index and OAMR_GZ_PIN=strict." >&2
+  exit 1
+else
+  # packages.ros.org keeps only the newest build of a package. When the tested builds are gone, the current
+  # ones are installed and the difference is stated; the release was not qualified on them.
+  echo "WARNING: installing the current Gazebo Harmonic vendor builds instead of the tested ones."
+  echo "WARNING: rc.1 was qualified on gz-sim ${GZ_SIM_VENDOR}, gz-tools ${GZ_TOOLS_VENDOR}, sdformat ${SDFORMAT_VENDOR}."
+  sudo apt-get install -y ros-jazzy-gz-sim-vendor ros-jazzy-gz-tools-vendor ros-jazzy-sdformat-vendor
+fi
+dpkg-query -W -f='installed: ${Package} ${Version}\n' ros-jazzy-gz-sim-vendor ros-jazzy-gz-tools-vendor ros-jazzy-sdformat-vendor
 
 step "3/6 Import the pinned sources into ${WORKSPACE}"
 mkdir -p "$WORKSPACE"

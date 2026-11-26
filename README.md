@@ -22,6 +22,37 @@ Digital Twin release candidate: ROS 2 Jazzy, Gazebo Harmonic, CycloneDDS. It hol
 acceptance workflow of the pinned upperbody commit checks out, at the same commits and the same paths. Nothing else is
 supported in rc.1: no operator UI, no MuJoCo or Isaac Sim, no camera-driven manipulation, no hardware.
 
+Install and build it on Ubuntu 24.04 (x86_64) with one transparent script. It uses `sudo` only for `apt` and
+`rosdep init`, and prints every step:
+
+```bash
+git clone https://github.com/openAMRobot/openamrobot-manifest.git
+cd openamrobot-manifest
+bash tools/bootstrap_digital_twin.sh ~/oamr_dt_ws
+```
+
+The script adds the ROS 2 apt source, installs ROS 2 Jazzy and the Gazebo Harmonic builds the release was tested on,
+imports the six repositories at their pinned commits, checks the result, installs the dependencies and builds. At the
+end it prints the commands to start the twin. If the tested Gazebo builds are no longer in the apt index it installs the
+current ones and says so. Then, in every new terminal:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/oamr_dt_ws/install/setup.bash
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast rviz:=true
+```
+
+and, in a second terminal with the same three lines first, a first demonstration (the base drives to a goal):
+
+```bash
+ros2 run openamrobot_build1_scene run_scenario.py scn01_drive
+```
+
+The workflow `Digital Twin clean install` runs exactly this in two fresh environments: bootstrap, a second bootstrap,
+headless launch, advancing `/clock`, `/robot_description`, TF with `base_link`, and the drive scenario. It is simulation
+evidence only. The manual equivalent of the import and check steps:
+
 ```bash
 mkdir -p ~/oamr_dt_ws && cd ~/oamr_dt_ws
 vcs import . < /absolute/path/releases/v2.0.0-rc.1-digital-twin.repos
@@ -38,7 +69,7 @@ The full file below is the source inventory of the release archive. It is not a 
 is provided by both `openamrobot-interfaces` and `openamrobot-ui` there.
 
 [`releases/v2.0.0-rc.1.repos`](releases/v2.0.0-rc.1.repos) is a separate candidate
-snapshot of the reviewed main of each repository, read 2026-11-20 (v2.0.0-rc.1). All 14 entries use full 40-character commit SHAs and
+snapshot for v2.0.0-rc.1: platform and upperbody software on their `release/2.0.0-rc.1` branches, the other repositories at reviewed commits. All 14 entries use full 40-character commit SHAs and
 retain the development manifest's repository URLs and checkout paths.
 
 From this repository, validate the snapshot:

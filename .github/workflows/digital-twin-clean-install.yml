@@ -32,9 +32,9 @@ jobs:
         with:
           persist-credentials: false
       - name: Published bootstrap procedure
-        run: bash tools/bootstrap_digital_twin.sh "$HOME/oamr_dt_ws"
+        run: OAMR_GZ_PIN=strict bash tools/bootstrap_digital_twin.sh "$HOME/oamr_dt_ws"
       - name: Second run of the bootstrap must also succeed
-        run: bash tools/bootstrap_digital_twin.sh "$HOME/oamr_dt_ws"
+        run: OAMR_GZ_PIN=strict bash tools/bootstrap_digital_twin.sh "$HOME/oamr_dt_ws"
       - name: Headless launch, clock, robot description, TF and drive demo
         shell: bash
         run: |
