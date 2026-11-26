@@ -72,3 +72,8 @@ as the acceptance workflow builds them. New `tools/check_profile.py` with tests:
 manifest and with the acceptance configuration, unique package providers. Local evidence: 53 unit tests pass (11 of them new); fresh
 import of the profile, exact export matches, 26 package names, no duplicate. Not verified here: build, launch, gates
 (reported on openamrobot-release#18). The other entries of the full file keep their pins of 20 Nov.
+
+2026-11-26: clean-install second-launch CI fix. The arm-demo launch now explicitly
+uses headless:=true, matching the first launch and avoiding Qt/xcb display failure
+on runners. Regression test fails on the previous workflow and passes with the
+fix. Candidate source/profile pins unchanged; hosted checks must rerun.

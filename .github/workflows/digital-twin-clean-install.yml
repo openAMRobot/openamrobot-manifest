@@ -101,7 +101,7 @@ jobs:
           echo "=== last lines of the launch log"; tail -n 40 "$RUNNER_TEMP/launch.log"
           # Second launch in the same environment, robot at the work shelf, for the arm demonstration.
           arms=0
-          setsid ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast station:=work_shelf sensors:=false nav2:=false \
+          setsid ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast station:=work_shelf sensors:=false nav2:=false headless:=true \
             > "$RUNNER_TEMP/launch2.log" 2>&1 &
           launch2_pid=$!
           timeout 900 ros2 run openamrobot_build1_scene run_scenario.py scn03_arms_reach --log-dir "$RUNNER_TEMP/demo" || arms=$?
