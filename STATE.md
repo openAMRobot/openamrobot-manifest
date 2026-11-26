@@ -60,3 +60,14 @@ is rechecked from an isolated temporary directory; ambiguous prefixes, missing
 refs, network failures and timeouts fail closed. The CLI remains executable.
 Regression evidence is recorded in PR #19; live import and driver-build results
 are separate hosted checks, never inferred from the unit tests.
+
+
+## v2.0.0-rc.1 final pins and supported profile (26 Nov 2026)
+
+`releases/v2.0.0-rc.1.repos`: platform `ddd20ab` (branch `release/2.0.0-rc.1`, `334e0ad` plus the documentation-only
+cleanup openamr-platform-sw#210; platform `main` with #204 is not used) and the upperbody candidate of
+openamr-upperbody-sw#144. New `releases/v2.0.0-rc.1-digital-twin.repos`: the supported installation, six repositories
+as the acceptance workflow builds them. New `tools/check_profile.py` with tests: pin agreement with the release
+manifest and with the acceptance configuration, unique package providers. Local evidence: 53 unit tests pass (11 of them new); fresh
+import of the profile, exact export matches, 26 package names, no duplicate. Not verified here: build, launch, gates
+(reported on openamrobot-release#18). The other entries of the full file keep their pins of 20 Nov.

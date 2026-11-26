@@ -1,0 +1,94 @@
+name: Digital Twin clean install
+
+# Follows the published installation of the supported profile on two fresh machines: bootstrap script, build, then a
+# headless launch that must show an advancing /clock, the robot description and TF. A build alone does not pass.
+# Simulation only. Not a release gate for behaviour: the mission, scene and SIL gates run in openamr-upperbody-sw.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'releases/v2.0.0-rc.1-digital-twin.repos'
+      - 'tools/bootstrap_digital_twin.sh'
+      - 'tools/check_profile.py'
+      - '.github/workflows/digital-twin-clean-install.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: clean install ${{ matrix.environment }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [1, 2]
+    env:
+      RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
+      CYCLONEDDS_URI: '<CycloneDDS><Domain Id="any"><Discovery><MaxAutoParticipantIndex>120</MaxAutoParticipantIndex></Discovery></Domain></CycloneDDS>'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Published bootstrap procedure
+        run: bash tools/bootstrap_digital_twin.sh "$HOME/oamr_dt_ws"
+      - name: Second run of the bootstrap must also succeed
+        run: bash tools/bootstrap_digital_twin.sh "$HOME/oamr_dt_ws"
+      - name: Headless launch, clock, robot description and TF
+        shell: bash
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          source "$HOME/oamr_dt_ws/install/setup.bash"
+          ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast headless:=true > "$RUNNER_TEMP/launch.log" 2>&1 &
+          launch_pid=$!
+          python3 - <<'PY'
+          import sys, time
+          import rclpy
+          from rclpy.node import Node
+          from rclpy.qos import QoSProfile, DurabilityPolicy, ReliabilityPolicy
+          from rosgraph_msgs.msg import Clock
+          from std_msgs.msg import String
+          from tf2_msgs.msg import TFMessage
+
+          rclpy.init()
+          node = Node('clean_install_probe')
+          seen = {'clock': [], 'description': 0, 'frames': set()}
+          node.create_subscription(Clock, '/clock', lambda m: seen['clock'].append(m.clock.sec + m.clock.nanosec * 1e-9), 10)
+          latched = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL, reliability=ReliabilityPolicy.RELIABLE)
+          node.create_subscription(String, '/robot_description', lambda m: seen.__setitem__('description', len(m.data)), latched)
+          node.create_subscription(TFMessage, '/tf', lambda m: seen['frames'].update(t.child_frame_id for t in m.transforms), 100)
+          deadline = time.monotonic() + 300
+          ok = False
+          while time.monotonic() < deadline:
+              rclpy.spin_once(node, timeout_sec=0.5)
+              clock = seen['clock']
+              if len(clock) > 20 and clock[-1] - clock[0] > 5.0 and seen['description'] > 1000 and 'base_link' in seen['frames']:
+                  ok = True
+                  break
+          first, last = (seen['clock'][0], seen['clock'][-1]) if seen['clock'] else (None, None)
+          print(f"PROBE clock messages {len(seen['clock'])}, first {first}, last {last}, robot_description {seen['description']} characters, "
+                f"tf child frames {len(seen['frames'])}, base_link {'base_link' in seen['frames']}")
+          print('PROBE PASS' if ok else 'PROBE FAIL')
+          sys.exit(0 if ok else 1)
+          PY
+          probe=$?
+          kill -INT "$launch_pid" 2> /dev/null || true
+          for _ in $(seq 1 40); do kill -0 "$launch_pid" 2> /dev/null || break; sleep 1; done
+          kill -KILL "$launch_pid" 2> /dev/null || true
+          echo "=== last lines of the launch log"; tail -n 40 "$RUNNER_TEMP/launch.log"
+          exit "$probe"
+      - name: Evidence
+        if: always()
+        run: |
+          echo "### Clean install ${{ matrix.environment }}" >> "$GITHUB_STEP_SUMMARY"
+          { echo '```'; cat "$HOME/oamr_dt_ws/exact.repos" 2> /dev/null || echo 'no exact.repos'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clean-install-${{ matrix.environment }}
+          path: |
+            ~/oamr_dt_ws/exact.repos
+            ~/oamr_dt_ws/log/latest_build/events.log
+            ${{ runner.temp }}/launch.log
+          if-no-files-found: warn

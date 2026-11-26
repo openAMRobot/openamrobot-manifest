@@ -48,6 +48,15 @@ jobs:
           vcs export --exact "$RUNNER_TEMP/rc1-workspace" > "$RUNNER_TEMP/rc1-exact.repos"
           python tools/check_release_manifest.py releases/v2.0.0-rc.1.repos --exact-export "$RUNNER_TEMP/rc1-exact.repos"
 
+      - name: Supported Digital Twin profile, pins, acceptance agreement and unique package providers
+        run: |
+          python tools/check_manifest.py --offline releases/v2.0.0-rc.1-digital-twin.repos
+          mkdir -p "$RUNNER_TEMP/dt-workspace"
+          vcs import "$RUNNER_TEMP/dt-workspace" < releases/v2.0.0-rc.1-digital-twin.repos
+          vcs export --exact "$RUNNER_TEMP/dt-workspace" > "$RUNNER_TEMP/dt-exact.repos"
+          python tools/check_release_manifest.py releases/v2.0.0-rc.1-digital-twin.repos --exact-export "$RUNNER_TEMP/dt-exact.repos"
+          python tools/check_profile.py releases/v2.0.0-rc.1-digital-twin.repos --release releases/v2.0.0-rc.1.repos --workspace "$RUNNER_TEMP/dt-workspace"
+
       - uses: actions/upload-artifact@v4
         with:
           name: rc1-exact-manifest

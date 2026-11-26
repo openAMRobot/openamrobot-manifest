@@ -15,6 +15,28 @@ ROS 2 packages land in `src/`; additional UI ROS packages are discovered under `
 ## Pinned release checkout (OA-39)
 
 `openamrobot.repos` remains the development manifest and may track branches.
+## Supported Digital Twin profile (v2.0.0-rc.1)
+
+[`releases/v2.0.0-rc.1-digital-twin.repos`](releases/v2.0.0-rc.1-digital-twin.repos) is the supported installation of the
+Digital Twin release candidate: ROS 2 Jazzy, Gazebo Harmonic, CycloneDDS. It holds the six repositories that the Baseline 1
+acceptance workflow of the pinned upperbody commit checks out, at the same commits and the same paths. Nothing else is
+supported in rc.1: no operator UI, no MuJoCo or Isaac Sim, no camera-driven manipulation, no hardware.
+
+```bash
+mkdir -p ~/oamr_dt_ws && cd ~/oamr_dt_ws
+vcs import . < /absolute/path/releases/v2.0.0-rc.1-digital-twin.repos
+python3 /absolute/path/tools/check_profile.py /absolute/path/releases/v2.0.0-rc.1-digital-twin.repos \
+  --release /absolute/path/releases/v2.0.0-rc.1.repos --workspace .
+```
+
+`check_profile.py` fails when a pin differs from the release manifest, when a pin differs from what the acceptance workflow
+and `pins.yaml` of the imported upperbody commit name, or when two packages in the workspace provide the same ROS package
+name. It is a text and file check; it builds and runs nothing. The build and launch steps are in the release notes of
+`openamrobot-release`.
+
+The full file below is the source inventory of the release archive. It is not a buildable workspace: `openamr_ui_msgs`
+is provided by both `openamrobot-interfaces` and `openamrobot-ui` there.
+
 [`releases/v2.0.0-rc.1.repos`](releases/v2.0.0-rc.1.repos) is a separate candidate
 snapshot of the reviewed main of each repository, read 2026-11-20 (v2.0.0-rc.1). All 14 entries use full 40-character commit SHAs and
 retain the development manifest's repository URLs and checkout paths.

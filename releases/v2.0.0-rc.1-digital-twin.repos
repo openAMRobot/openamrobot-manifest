@@ -1,0 +1,29 @@
+# OpenAMRobot v2.0.0-rc.1, supported Digital Twin profile: the six repositories that the Baseline 1
+# acceptance workflow of the pinned upperbody commit checks out and builds, at the same commits and paths.
+# ROS 2 Jazzy, Gazebo Harmonic, CycloneDDS. This is the supported installation. The file v2.0.0-rc.1.repos
+# beside it is the full source inventory of the release archive and is not a buildable workspace.
+repositories:
+  src/openamr-upperbody-sw:
+    type: git
+    url: https://github.com/openAMRobot/openamr-upperbody-sw.git
+    version: 729be2a1287b9199e54dfd162aa44b33810b3461
+  src/openamr-platform-sw:
+    type: git
+    url: https://github.com/openAMRobot/openamr-platform-sw.git
+    version: ddd20ab3a85d98bb78c4c5f014952c4a0717ef92
+  src/openamrobot-interfaces:
+    type: git
+    url: https://github.com/openAMRobot/openamrobot-interfaces.git
+    version: 50ed777be7990edbd3465f33fd97a158e7e3b88b
+  src/upstream/openarm_description:
+    type: git
+    url: https://github.com/enactic/openarm_description.git
+    version: 14ff67b638ff1c738a1b9a6be8aaa5ce5ed2c831
+  src/upstream/openarm_ros2:
+    type: git
+    url: https://github.com/enactic/openarm_ros2.git
+    version: 4e837e1d0dae692ff67b560b69d8d281d7a8d4ed
+  src/upstream/openarm_can:
+    type: git
+    url: https://github.com/enactic/openarm_can.git
+    version: bfd4e52194aefe38389fa6e670be3738136facb9
