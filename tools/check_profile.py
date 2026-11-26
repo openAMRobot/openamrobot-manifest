@@ -32,6 +32,7 @@ PIN_KEYS = {
     'src/upstream/openarm_ros2': ('openarm_ros2',),
     'src/upstream/openarm_can': ('openarm_can',),
 }
+MODEL_PINS_FILE = 'ros2/src/openamrobot_upperbody_description/config/upstream_pins.yaml'
 WORKFLOW_VARIABLES = {
     'src/openamr-platform-sw': 'PLATFORM_SW_SHA',
     'src/openamrobot-interfaces': 'INTERFACES_SHA',
@@ -74,6 +75,20 @@ def acceptance_mismatches(profile, upperbody_root):
     return errors
 
 
+def model_pin_differences(profile, upperbody_root):
+    """The model and emulator tests of the upperbody commit build the platform commit named in
+    upstream_pins.yaml. When that differs from the profile, those tests did not run on the candidate
+    platform. Returned as text; the caller decides whether it is a note or an error."""
+    path = Path(upperbody_root) / MODEL_PINS_FILE
+    if not path.is_file() or 'src/openamr-platform-sw' not in profile:
+        return []
+    model_pin = yaml.safe_load(path.read_text(encoding='utf-8'))['pins'].get('openamr_platform_sw')
+    candidate = profile['src/openamr-platform-sw']['version']
+    if model_pin and model_pin != candidate:
+        return [f'model and emulator tests build platform {model_pin} ({MODEL_PINS_FILE}), the profile pins {candidate}']
+    return []
+
+
 def package_providers(workspace):
     """Map package name -> package.xml paths, skipping what colcon skips."""
     providers = {}
@@ -107,6 +122,8 @@ def main():
     parser.add_argument('--workspace', type=Path, help='directory the profile was imported into with vcs import')
     parser.add_argument('--upperbody', default='src/openamr-upperbody-sw',
                         help='profile entry whose acceptance configuration is compared (needs --workspace)')
+    parser.add_argument('--strict-model-pin', action='store_true',
+                        help='fail, instead of printing a note, when the model tests build another platform commit')
     args = parser.parse_args()
 
     profile = load_release(args.profile)
@@ -116,6 +133,11 @@ def main():
         print(f'checked {len(profile)} profile entries against {args.release}')
     if args.workspace:
         errors += acceptance_mismatches(profile, args.workspace / args.upperbody)
+        differences = model_pin_differences(profile, args.workspace / args.upperbody)
+        if args.strict_model_pin:
+            errors += differences
+        else:
+            print('\n'.join('NOTE ' + difference for difference in differences), end='\n' if differences else '')
         providers = package_providers(args.workspace)
         duplicates = {name: paths for name, paths in providers.items() if len(paths) > 1}
         for name, paths in sorted(duplicates.items()):

@@ -4,8 +4,8 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from check_profile import (ACCEPTANCE_WORKFLOW, PINS_FILE, acceptance_mismatches, duplicate_providers,
-                           package_providers, release_mismatches)
+from check_profile import (ACCEPTANCE_WORKFLOW, MODEL_PINS_FILE, PINS_FILE, acceptance_mismatches,
+                           duplicate_providers, model_pin_differences, package_providers, release_mismatches)
 from check_release_manifest import load_release
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -121,6 +121,30 @@ class PackageProviderTests(unittest.TestCase):
             outer = package(tmp, 'src/a/outer', 'outer')
             package(outer, 'test/fixture', 'outer')
             self.assertEqual(duplicate_providers(tmp), {})
+
+
+class ModelPin(unittest.TestCase):
+    def model_pins(self, root, sha):
+        path = Path(root) / MODEL_PINS_FILE
+        path.parent.mkdir(parents=True)
+        path.write_text(f'pins:\n  openamr_platform_sw: "{sha}"\n')
+
+    def test_a_model_pin_equal_to_the_profile_is_silent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.model_pins(tmp, A)
+            self.assertEqual(model_pin_differences(full_profile(A), tmp), [])
+
+    def test_a_model_pin_on_another_platform_commit_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.model_pins(tmp, B)
+            differences = model_pin_differences(full_profile(A), tmp)
+            self.assertEqual(len(differences), 1)
+            self.assertIn(B, differences[0])
+            self.assertIn(A, differences[0])
+
+    def test_a_checkout_without_the_model_pins_file_is_silent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(model_pin_differences(full_profile(A), tmp), [])
 
 
 if __name__ == '__main__':
