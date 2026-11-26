@@ -93,11 +93,13 @@ In every new terminal:
   export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
   export CYCLONEDDS_URI='<CycloneDDS><Domain Id="any"><Discovery><MaxAutoParticipantIndex>120</MaxAutoParticipantIndex></Discovery></Domain></CycloneDDS>'
 
-Start the twin with RViz (needs the five virtual CAN interfaces, set up once per boot):
+Start the twin with RViz and the device emulators (needs five virtual CAN interfaces, set up once per boot;
+the script calls sudo without a password prompt, so run sudo -v first):
+  sudo -v
   ros2 run openamrobot_build1_scene setup_vcan_all.sh
   ros2 launch openamrobot_build1_scene build1.launch.py rviz:=true
 
-Without virtual CAN (no firmware in the loop):
+Simplest start, without virtual CAN (no firmware in the loop):
   ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast rviz:=true
 
 Run a scenario against the running launch, in a second terminal:
