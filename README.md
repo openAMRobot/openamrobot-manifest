@@ -15,8 +15,71 @@ ROS 2 packages land in `src/`; additional UI ROS packages are discovered under `
 ## Pinned release checkout (OA-39)
 
 `openamrobot.repos` remains the development manifest and may track branches.
+## Supported Digital Twin profile (v2.0.0-rc.1)
+
+[`releases/v2.0.0-rc.1-digital-twin.repos`](releases/v2.0.0-rc.1-digital-twin.repos) is the supported installation of the
+Digital Twin release candidate: ROS 2 Jazzy, Gazebo Harmonic, CycloneDDS. It holds the six repositories that the Baseline 1
+acceptance workflow of the pinned upperbody commit checks out, at the same commits and the same paths. Nothing else is
+supported in rc.1: no operator UI, no MuJoCo or Isaac Sim, no camera-driven manipulation, no hardware.
+
+Install and build it on Ubuntu 24.04 (x86_64) with one transparent script. It uses `sudo` only for `apt` and
+`rosdep init`, and prints every step:
+
+```bash
+git clone https://github.com/openAMRobot/openamrobot-manifest.git
+cd openamrobot-manifest
+bash tools/bootstrap_digital_twin.sh ~/oamr_dt_ws
+```
+
+The script adds the ROS 2 apt source, installs ROS 2 Jazzy and the Gazebo Harmonic builds the release was tested on,
+imports the six repositories at their pinned commits, checks the result, installs the dependencies and builds. At the
+end it prints the commands to start the twin. If the tested Gazebo builds are no longer in the apt index it installs the
+current ones and says so.
+
+What the script leaves on your machine besides the workspace: the ROS 2 apt source, the installed packages, and an
+`apt-mark hold` on three Gazebo packages (`ros-jazzy-gz-sim-vendor`, `ros-jazzy-gz-tools-vendor`,
+`ros-jazzy-sdformat-vendor`). The hold keeps `apt upgrade` from replacing the builds the release was tested on. It is
+only set when those tested builds were installed; in the fallback case (current builds, with a warning) nothing is
+held. Inspect it with `apt-mark showhold` and release it with
+`sudo apt-mark unhold ros-jazzy-gz-sim-vendor ros-jazzy-gz-tools-vendor ros-jazzy-sdformat-vendor`.
+`OAMR_GZ_PIN=strict bash tools/bootstrap_digital_twin.sh ...` stops with an error instead of falling back.
+
+Now, in every new terminal:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source ~/oamr_dt_ws/install/setup.bash
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast rviz:=true
+```
+
+and, in a second terminal with the same three lines first, a first demonstration (the base drives to a goal):
+
+```bash
+ros2 run openamrobot_build1_scene run_scenario.py scn01_drive
+```
+
+The workflow `Digital Twin clean install` runs exactly this in two fresh environments: bootstrap, a second bootstrap,
+headless launch, advancing `/clock`, `/robot_description`, TF with `base_link`, and the drive scenario. It is simulation
+evidence only. The manual equivalent of the import and check steps:
+
+```bash
+mkdir -p ~/oamr_dt_ws && cd ~/oamr_dt_ws
+vcs import . < /absolute/path/releases/v2.0.0-rc.1-digital-twin.repos
+python3 /absolute/path/tools/check_profile.py /absolute/path/releases/v2.0.0-rc.1-digital-twin.repos \
+  --release /absolute/path/releases/v2.0.0-rc.1.repos --workspace .
+```
+
+`check_profile.py` fails when a pin differs from the release manifest, when a pin differs from what the acceptance workflow
+and `pins.yaml` of the imported upperbody commit name, or when two packages in the workspace provide the same ROS package
+name. It is a text and file check; it builds and runs nothing. The build and launch steps are in the release notes of
+`openamrobot-release`.
+
+The full file below is the source inventory of the release archive. It is not a buildable workspace: `openamr_ui_msgs`
+is provided by both `openamrobot-interfaces` and `openamrobot-ui` there.
+
 [`releases/v2.0.0-rc.1.repos`](releases/v2.0.0-rc.1.repos) is a separate candidate
-snapshot dated 2026-10-19. All 13 entries use full 40-character commit SHAs and
+snapshot for v2.0.0-rc.1: platform and upperbody software on their `release/2.0.0-rc.1` branches, the other repositories at reviewed commits. All 14 entries use full 40-character commit SHAs and
 retain the development manifest's repository URLs and checkout paths.
 
 From this repository, validate the snapshot:

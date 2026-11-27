@@ -1,5 +1,13 @@
 # Manifest state
 
+## v2.0.0-rc.1 pins (2026-11-20)
+
+`releases/v2.0.0-rc.1.repos` moves from the 2026-10-19 candidate to the reviewed
+main of each repository read on 2026-11-20, the same SHAs as
+openamrobot-release `manifests/v2.0.0-rc.1.repos` (its parity check requires
+it). openamrobot-embodied-ai joins both manifests, so they hold 14 entries; the
+two counting tests follow. Source pins only, not release acceptance.
+
 ## OA-06 source drivers
 
 The development and rc.1 manifests now contain 13 entries, adding pinned
@@ -52,3 +60,32 @@ is rechecked from an isolated temporary directory; ambiguous prefixes, missing
 refs, network failures and timeouts fail closed. The CLI remains executable.
 Regression evidence is recorded in PR #19; live import and driver-build results
 are separate hosted checks, never inferred from the unit tests.
+
+
+## v2.0.0-rc.1 final pins and supported profile (26 Nov 2026)
+
+`releases/v2.0.0-rc.1.repos`: platform `ddd20ab` (branch `release/2.0.0-rc.1`, `334e0ad` plus the documentation-only
+cleanup openamr-platform-sw#210; platform `main` with #204 is not used) and upperbody `1ab45a6` (branch `release/2.0.0-rc.1`,
+the merge of openamr-upperbody-sw#144; same tree as the tested head `729be2a`). Hardware `3394123` and UI `2cf9179`
+are the merges of the publication cleanups (openamr-platform-hw#44, openamrobot-ui#65); both are source snapshots outside the supported profile. New `releases/v2.0.0-rc.1-digital-twin.repos`: the supported installation, six repositories
+as the acceptance workflow builds them. New `tools/check_profile.py` with tests: pin agreement with the release
+manifest and with the acceptance configuration, unique package providers. Local evidence: 53 unit tests pass (11 of them new); fresh
+import of the profile, exact export matches, 26 package names, no duplicate. Not verified here: build, launch, gates
+(reported on openamrobot-release#18). The other entries of the full file keep their pins of 20 Nov.
+
+### Candidate 2 pins (26 Nov 2026)
+
+Both files now pin platform `2ac4070` (openamr-platform-sw#211: SIL effective track 0.411 m, a calibration of the
+twin; model keeps 0.400) and upperbody `6687f65` (openamr-upperbody-sw#146: platform and model pins on that commit,
+spawn height 0.0). The paragraph above describes candidate 1 and is kept as history. Local evidence: 58 unit tests
+pass; `check_profile.py --strict-model-pin` against the upperbody tree at `6687f65` passes (model pin equals the
+platform pin); yamllint clean. Not verified here: clean install on these pins (hosted check on this pull request).
+
+2026-11-26: clean-install second-launch CI fix. The arm-demo launch now explicitly
+uses headless:=true, matching the first launch and avoiding Qt/xcb display failure
+on runners. Regression test fails on the previous workflow and passes with the
+fix. Candidate source/profile pins unchanged; hosted checks must rerun.
+2026-11-26: clean-install arm demonstration. Run 45815162637 failed `scn03_arms_reach` in the `fast` profile with
+`left_park_joints_not_moved = 2`: the default engine (DART) leaves joint 4 on its lower limit (openamr-upperbody-sw #126).
+Not a relaunch defect. The second launch now uses the arguments of the scene test `scn15_grasp_fast` (Bullet Featherstone)
+and runs `scn04_grasp`; `tests/test_clean_install_workflow.py` holds that.

@@ -34,7 +34,7 @@ class DriverSourceTests(unittest.TestCase):
         sent = yaml.safe_load(run.call_args.kwargs['input'])['repositories']
         self.assertNotIn('src/sllidar_ros2', sent)
         self.assertNotIn('src/micro_ros_agent', sent)
-        self.assertEqual(len(sent), 11)
+        self.assertEqual(len(sent), 12)
 
     def test_failed_pin_fails_remote_stage(self):
         with patch.object(check_manifest, 'verify_pinned_commit', return_value=(False, 'fetch failed')):

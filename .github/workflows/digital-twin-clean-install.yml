@@ -1,0 +1,136 @@
+name: Digital Twin clean install
+
+# Follows the published installation of the supported profile on two fresh machines: bootstrap script, build, then a
+# headless launch that must show an advancing /clock, the robot description and TF. A build alone does not pass.
+# Simulation only. Not a release gate for behaviour: the mission, scene and SIL gates run in openamr-upperbody-sw.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'releases/v2.0.0-rc.1-digital-twin.repos'
+      - 'tools/bootstrap_digital_twin.sh'
+      - 'tools/check_profile.py'
+      - '.github/workflows/digital-twin-clean-install.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: clean install ${{ matrix.environment }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [1, 2]
+    env:
+      RMW_IMPLEMENTATION: rmw_cyclonedds_cpp
+      CYCLONEDDS_URI: '<CycloneDDS><Domain Id="any"><Discovery><MaxAutoParticipantIndex>120</MaxAutoParticipantIndex></Discovery></Domain></CycloneDDS>'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Published bootstrap procedure
+        run: OAMR_GZ_PIN=strict bash tools/bootstrap_digital_twin.sh "$HOME/oamr_dt_ws"
+      - name: Second run of the bootstrap must also succeed
+        run: OAMR_GZ_PIN=strict bash tools/bootstrap_digital_twin.sh "$HOME/oamr_dt_ws"
+      - name: Headless launch, clock, robot description, TF, drive and lift demo, shutdown, relaunch, arm demo
+        shell: bash
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          source "$HOME/oamr_dt_ws/install/setup.bash"
+          # setsid: the launch gets its own process group, so the interrupt below reaches every process of it, as Ctrl+C in a terminal does.
+          setsid ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast headless:=true > "$RUNNER_TEMP/launch.log" 2>&1 &
+          launch_pid=$!
+          probe=0
+          python3 - <<'PY' || probe=$?
+          import sys, time
+          import rclpy
+          from rclpy.node import Node
+          from rclpy.qos import QoSProfile, DurabilityPolicy, ReliabilityPolicy
+          from rosgraph_msgs.msg import Clock
+          from std_msgs.msg import String
+          from tf2_msgs.msg import TFMessage
+
+          rclpy.init()
+          node = Node('clean_install_probe')
+          seen = {'clock': [], 'description': 0, 'frames': set()}
+          node.create_subscription(Clock, '/clock', lambda m: seen['clock'].append(m.clock.sec + m.clock.nanosec * 1e-9), 10)
+          latched = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL, reliability=ReliabilityPolicy.RELIABLE)
+          node.create_subscription(String, '/robot_description', lambda m: seen.__setitem__('description', len(m.data)), latched)
+          def frames(m):
+              for t in m.transforms:
+                  seen['frames'].update((t.header.frame_id, t.child_frame_id))
+          node.create_subscription(TFMessage, '/tf', frames, 100)
+          node.create_subscription(TFMessage, '/tf_static', frames, QoSProfile(depth=100, durability=DurabilityPolicy.TRANSIENT_LOCAL, reliability=ReliabilityPolicy.RELIABLE))
+          deadline = time.monotonic() + 300
+          ok = False
+          while time.monotonic() < deadline:
+              rclpy.spin_once(node, timeout_sec=0.5)
+              clock = seen['clock']
+              if len(clock) > 20 and clock[-1] - clock[0] > 5.0 and seen['description'] > 1000 and 'base_link' in seen['frames']:
+                  ok = True
+                  break
+          first, last = (seen['clock'][0], seen['clock'][-1]) if seen['clock'] else (None, None)
+          print(f"PROBE clock messages {len(seen['clock'])}, first {first}, last {last}, robot_description {seen['description']} characters, "
+                f"tf frames {len(seen['frames'])}, base_link {'base_link' in seen['frames']}")
+          print('PROBE frames', sorted(seen['frames']))
+          print('PROBE PASS' if ok else 'PROBE FAIL')
+          sys.exit(0 if ok else 1)
+          PY
+          demo=0
+          if [ "$probe" -eq 0 ]; then
+            mkdir -p "$RUNNER_TEMP/demo"
+            timeout 600 ros2 run openamrobot_build1_scene run_scenario.py scn01_drive --log-dir "$RUNNER_TEMP/demo" || demo=$?
+            echo "DEMO scn01_drive exit code $demo (0 PASS, 1 FAIL, 3 BLOCKED, 124 timeout)"
+            lift=0
+            timeout 600 ros2 run openamrobot_build1_scene run_scenario.py scn16_lift_stops --log-dir "$RUNNER_TEMP/demo" || lift=$?
+            echo "DEMO scn16_lift_stops exit code $lift (0 PASS, 1 FAIL, 3 BLOCKED, 124 timeout)"
+          else
+            demo=1; lift=1; echo "DEMO not run because the probe failed"
+          fi
+          # Shutdown as a user does it: one interrupt to the launch. Reported, with the time it took.
+          kill -INT -- "-$launch_pid" 2> /dev/null || true
+          shutdown=forced
+          for second in $(seq 1 90); do kill -0 "$launch_pid" 2> /dev/null || { shutdown="clean after ${second} s"; break; }; sleep 1; done
+          kill -KILL -- "-$launch_pid" 2> /dev/null || true
+          sleep 2
+          echo "SHUTDOWN first launch: $shutdown; processes of the launch still alive: $(pgrep -g "$launch_pid" | wc -l)"
+          grep -c "user interrupted\|SIGINT" "$RUNNER_TEMP/launch.log" | sed 's/^/interrupt lines in the launch log: /' 
+          echo "=== last lines of the launch log"; tail -n 40 "$RUNNER_TEMP/launch.log"
+          # Second launch in the same environment, robot at the work shelf, for the arm demonstration.
+          arms=0
+          # Arguments of the scene test scn15_grasp_fast of the pinned upperbody commit. In the fast profile the arms are
+          # only qualified with the Bullet Featherstone engine: with the default engine (DART) joint 4 on its lower limit
+          # does not move although the controller reports success (openamr-upperbody-sw #126; run 45815162637 showed it
+          # as left_park_joints_not_moved = 2 with scn03_arms_reach, which the scene tests run in the device profile only).
+          setsid ros2 launch openamrobot_build1_scene build1.launch.py profile:=fast station:=work_shelf sensors:=false nav2:=false \
+            moveit:=true physics_engine:=gz-physics-bullet-featherstone-plugin headless:=true > "$RUNNER_TEMP/launch2.log" 2>&1 &
+          launch2_pid=$!
+          timeout 1200 ros2 run openamrobot_build1_scene run_scenario.py scn04_grasp --log-dir "$RUNNER_TEMP/demo" || arms=$?
+          echo "DEMO scn04_grasp (both arms and grippers) on the second launch, exit code $arms (0 PASS, 1 FAIL, 3 BLOCKED, 124 timeout)"
+          kill -INT -- "-$launch2_pid" 2> /dev/null || true
+          shutdown2=forced
+          for second in $(seq 1 90); do kill -0 "$launch2_pid" 2> /dev/null || { shutdown2="clean after ${second} s"; break; }; sleep 1; done
+          kill -KILL -- "-$launch2_pid" 2> /dev/null || true
+          echo "SHUTDOWN second launch: $shutdown2"
+          echo "=== last lines of the second launch log"; tail -n 30 "$RUNNER_TEMP/launch2.log"
+          echo "RESULT probe $probe drive $demo lift $lift arms $arms shutdown '$shutdown' / '$shutdown2'"
+          [ "$probe" -eq 0 ] && [ "$demo" -eq 0 ] && [ "$lift" -eq 0 ] && [ "$arms" -eq 0 ]
+      - name: Evidence
+        if: always()
+        run: |
+          echo "### Clean install ${{ matrix.environment }}" >> "$GITHUB_STEP_SUMMARY"
+          { echo '```'; cat "$HOME/oamr_dt_ws/exact.repos" 2> /dev/null || echo 'no exact.repos'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clean-install-${{ matrix.environment }}
+          path: |
+            ~/oamr_dt_ws/exact.repos
+            ~/oamr_dt_ws/log/latest_build/events.log
+            ${{ runner.temp }}/launch.log
+            ${{ runner.temp }}/launch2.log
+            ${{ runner.temp }}/demo
+          if-no-files-found: warn
