@@ -89,3 +89,13 @@ fix. Candidate source/profile pins unchanged; hosted checks must rerun.
 `left_park_joints_not_moved = 2`: the default engine (DART) leaves joint 4 on its lower limit (openamr-upperbody-sw #126).
 Not a relaunch defect. The second launch now uses the arguments of the scene test `scn15_grasp_fast` (Bullet Featherstone)
 and runs `scn04_grasp`; `tests/test_clean_install_workflow.py` holds that.
+
+### Hardware documentation pin (27 Nov 2026)
+
+`releases/v2.0.0-rc.1.repos` pins openamr-platform-hw `bf9fefa0250e4e59d4de4e634461d30689944357`, the squash merge of
+openamr-platform-hw#49 (public extracts of BOM Issue 7.15 and B-02 rev18.11; documentation only, not approval of
+the electrical design). The supported Digital Twin profile does not include the hardware repository and is
+unchanged. Local evidence: 58 tests pass; the snapshot files at that commit are byte-identical to the reviewed head
+`aca1358`. The clean install runs on this pull request's new head. Approvals given on `442241a` apply to the
+previous hardware pin and must be given again.
+
