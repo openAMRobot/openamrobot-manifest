@@ -89,3 +89,17 @@ fix. Candidate source/profile pins unchanged; hosted checks must rerun.
 `left_park_joints_not_moved = 2`: the default engine (DART) leaves joint 4 on its lower limit (openamr-upperbody-sw #126).
 Not a relaunch defect. The second launch now uses the arguments of the scene test `scn15_grasp_fast` (Bullet Featherstone)
 and runs `scn04_grasp`; `tests/test_clean_install_workflow.py` holds that.
+
+## Public hardware document snapshot follow-up (27 November 2026)
+
+After #23 merged at 68ccce3, the founder-selected public BOM Issue 7.15 and
+B-02 Battery Guide rev18.11 snapshots landed through hardware #49 at bf9fefa.
+The full release inventory now selects that actual merged hardware commit,
+matching release #18 eff86486. Only this documentation-source pin changes;
+the qualified software pair 2ac4070 / 6687f65 and six-entry runtime profile
+remain unchanged. Existing verification draft #25 is reused for this focused
+follow-up; the previous 'verification only' purpose remains in its history.
+Current-head validation and independent maintainer review are required before
+merge. The old b13a77f1 source checksum is historical; the expanded archive
+must be independently verified against its new recorded checksum. No tag,
+release publication or hardware acceptance is authorized by this pin update.
