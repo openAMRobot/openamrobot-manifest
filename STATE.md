@@ -90,6 +90,14 @@ fix. Candidate source/profile pins unchanged; hosted checks must rerun.
 Not a relaunch defect. The second launch now uses the arguments of the scene test `scn15_grasp_fast` (Bullet Featherstone)
 and runs `scn04_grasp`; `tests/test_clean_install_workflow.py` holds that.
 
+### Documentation pin (28 Nov 2026)
+
+`releases/v2.0.0-rc.1.repos` pins openamrobot-docs `19d5d2763699380507ed186dad94986570328518`, the squash merge of
+openamrobot-docs#103, instead of `852c32c`. Owner decision of 28 Nov 2026: a confidential term must not be in any
+public source, and the earlier docs snapshot contained it in two scripts. Only the docs line changes. The supported
+Digital Twin profile does not include the docs repository and is unchanged, so the clean install does not run. The
+rc.1 archive gets a new checksum in openamrobot-release.
+
 ### Hardware documentation pin (27 Nov 2026)
 
 `releases/v2.0.0-rc.1.repos` pins openamr-platform-hw `bf9fefa0250e4e59d4de4e634461d30689944357`, the squash merge of

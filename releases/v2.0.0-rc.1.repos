@@ -48,7 +48,7 @@ repositories:
   docs/openamrobot-docs:
     type: git
     url: https://github.com/openAMRobot/openamrobot-docs.git
-    version: 852c32c2b77fadbd119b1cc8c8fa5f629df5fbd2
+    version: 19d5d2763699380507ed186dad94986570328518
   src/sllidar_ros2:
     type: git
     url: https://github.com/Slamtec/sllidar_ros2.git
